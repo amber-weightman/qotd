@@ -1,11 +1,19 @@
 ﻿using Qotd.Application.Interfaces;
+using Qotd.Infrastructure.ChatGpt;
 
 namespace Qotd.Infrastructure.Services;
 
 internal record QuestionService : IQuestionService
 {
-    public Task<string> GetQuestionAsync()
+    private readonly IAIClient _client;
+    public QuestionService(IAIClient client)
     {
-        return Task.FromResult("What's the answer to life, the universe and everything? " + Guid.NewGuid());   
+        _client = client;
+    }
+
+    public async Task<string> GetQuestionAsync()
+    {
+        var test = await _client.Testing();
+        return "What's the answer to life, the universe and everything? " + Guid.NewGuid();
     }
 }
