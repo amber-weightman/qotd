@@ -11,9 +11,9 @@ internal record QuestionService : IQuestionService
         _client = client;
     }
 
-    public async Task<string> GetQuestionAsync()
+    public async Task<string> GetQuestion(CancellationToken cancellationToken)
     {
-        var test = await _client.Testing();
-        return "What's the answer to life, the universe and everything? " + Guid.NewGuid();
+        var test = await _client.Testing(cancellationToken);
+        return test ?? "What's the answer to life, the universe and everything?";
     }
 }

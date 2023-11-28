@@ -2,5 +2,5 @@
 
 public interface IQuestionService
 {
-    public Task<string> GetQuestionAsync();
+    public Task<string> GetQuestion(CancellationToken cancellationToken);
 }
