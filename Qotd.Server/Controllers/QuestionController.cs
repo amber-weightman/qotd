@@ -1,24 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
+using Qotd.Application.Interfaces;
 
-namespace Qotd.Server.Controllers
+namespace Qotd.Server.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class QuestionController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class QuestionController : ControllerBase
+    private readonly IQuestionService _questionService;
+    private readonly ILogger<QuestionController> _logger;
+
+    public QuestionController(IQuestionService questionService, ILogger<QuestionController> logger)
     {
-        private readonly ILogger<QuestionController> _logger;
+        _questionService = questionService;
+        _logger = logger;
+    }
 
-        public QuestionController(ILogger<QuestionController> logger)
-        {
-            _logger = logger;
-        }
+    [HttpGet(Name = "GetQuestion")]
+    public async Task<string> Get()
+    {
+        Thread.Sleep(3000);
 
-        [HttpGet(Name = "GetQuestion")]
-        public string Get()
-        {
-            Thread.Sleep(3000);
-
-            return "What's the answer to life, the universe and everything? " + Guid.NewGuid();
-        }
+        return await _questionService.GetQuestionAsync();
     }
 }

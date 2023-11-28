@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qotd.Api", "Qotd.Server\Qot
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "qotd.client", "qotd.client\qotd.client.esproj", "{138586F8-4E5A-4046-B318-E186E79E7DED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qotd.Application", "Qotd.Application\Qotd.Application.csproj", "{AF26AFEC-BA2E-4FB3-BAA3-24063170C47A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qotd.Infrastructure", "Qotd.Infrastructure\Qotd.Infrastructure.csproj", "{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +27,14 @@ Global
 		{138586F8-4E5A-4046-B318-E186E79E7DED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{138586F8-4E5A-4046-B318-E186E79E7DED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{138586F8-4E5A-4046-B318-E186E79E7DED}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AF26AFEC-BA2E-4FB3-BAA3-24063170C47A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF26AFEC-BA2E-4FB3-BAA3-24063170C47A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF26AFEC-BA2E-4FB3-BAA3-24063170C47A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF26AFEC-BA2E-4FB3-BAA3-24063170C47A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

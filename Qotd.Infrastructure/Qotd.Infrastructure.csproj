@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--<PackageReference Include="Betalgo.OpenAI" Version="7.4.1" />-->
+    <PackageReference Include="OpenAI-DotNet" Version="7.3.5" />
+    <!--<PackageReference Include="Forge.OpenAI" Version="1.1.6" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Qotd.Application\Qotd.Application.csproj" />
+  </ItemGroup>
+
+</Project>

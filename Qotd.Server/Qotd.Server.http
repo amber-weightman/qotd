@@ -1,6 +1,6 @@
 @Qotd.Server_HostAddress = http://localhost:5167
 
-GET {{Qotd.Server_HostAddress}}/weatherforecast/
+GET {{Qotd.Server_HostAddress}}/question/
 Accept: application/json
 
 ###

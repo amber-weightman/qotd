@@ -6,3 +6,8 @@
 /qotd.client/obj/Debug
 /Qotd.Server/bin/Debug/net8.0
 /Qotd.Server/obj
+/Qotd.Application/bin/Debug/net8.0
+/Qotd.Application/obj/Debug/net8.0
+/Qotd.Application/obj
+/Qotd.Infrastructure/bin/Debug/net8.0
+/Qotd.Infrastructure/obj

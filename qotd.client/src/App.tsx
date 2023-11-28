@@ -1,4 +1,4 @@
-import { Backdrop, Box, CircularProgress, Container } from '@mui/material';
+import { Backdrop, Box, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import './App.css';
 import AppMenu from './components/AppMenu';

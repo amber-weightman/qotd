@@ -18,9 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Qotd.Application\Qotd.Application.csproj" />
     <ProjectReference Include="..\qotd.client\qotd.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\Qotd.Infrastructure\Qotd.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
