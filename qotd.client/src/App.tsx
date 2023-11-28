@@ -24,7 +24,6 @@ function App() {
 
   return (
     <Box>
-      <Container maxWidth="md">
         {question !== undefined && <QuestionDisplay question={question}></QuestionDisplay>}
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -33,7 +32,7 @@ function App() {
           <CircularProgress color="inherit" />
         </Backdrop>
         <AppMenu question={question} lookupQuestion={lookupQuestion} />
-      </Container>
+      
       
     </Box>
   );

@@ -10,7 +10,7 @@ interface AppMenuProps {
 
 function AppMenu(props: AppMenuProps) {
   const [openToast, setOpenToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string|undefined>();
+  const [toastMessage, setToastMessage] = useState<string | undefined>();
 
   const enum menuOptions {
     'COPY',
@@ -38,10 +38,10 @@ function AppMenu(props: AppMenuProps) {
   };
 
   return (
-    <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <Box sx={{ height: 320, flexGrow: 1 }}>
       <SpeedDial
         ariaLabel="SpeedDial basic example"
-        sx={{ position: 'absolute', bottom: 16, right: 16 }}
+        sx={{ position: 'absolute', bottom: 32, right: 32 }}
         icon={<SpeedDialIcon />}
       >
         {actions.map((action) => (
@@ -55,8 +55,17 @@ function AppMenu(props: AppMenuProps) {
           />
         ))}
       </SpeedDial>
-      <Snackbar open={openToast} autoHideDuration={3000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }} >
+      <Snackbar
+        open={openToast}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
           {toastMessage}
         </Alert>
       </Snackbar>
