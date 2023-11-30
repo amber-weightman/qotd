@@ -15,8 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		README.md = README.md
-		.github\workflows\sonarqube.yml = .github\workflows\sonarqube.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qotd.UnitTests", "test\Qotd.UnitTests\Qotd.UnitTests.csproj", "{F7FE82ED-EA63-476B-8440-A07778E3037B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4477B052-8B24-47E9-BCC6-BDB089B96336}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,9 +45,16 @@ Global
 		{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7FE82ED-EA63-476B-8440-A07778E3037B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7FE82ED-EA63-476B-8440-A07778E3037B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7FE82ED-EA63-476B-8440-A07778E3037B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7FE82ED-EA63-476B-8440-A07778E3037B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F7FE82ED-EA63-476B-8440-A07778E3037B} = {4477B052-8B24-47E9-BCC6-BDB089B96336}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BEAB195-0668-4BED-9C29-018B578B8962}

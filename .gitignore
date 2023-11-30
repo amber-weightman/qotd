@@ -10,3 +10,5 @@
 /Qotd.Application/obj/*
 /Qotd.Infrastructure/bin/*
 /Qotd.Infrastructure/obj/*
+/test/Qotd.UnitTests/bin/*
+/test/Qotd.UnitTests/obj/*
