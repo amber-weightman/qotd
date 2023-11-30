@@ -7,9 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qotd.Api", "Qotd.Server\Qot
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "qotd.client", "qotd.client\qotd.client.esproj", "{138586F8-4E5A-4046-B318-E186E79E7DED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qotd.Application", "Qotd.Application\Qotd.Application.csproj", "{AF26AFEC-BA2E-4FB3-BAA3-24063170C47A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qotd.Application", "Qotd.Application\Qotd.Application.csproj", "{AF26AFEC-BA2E-4FB3-BAA3-24063170C47A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qotd.Infrastructure", "Qotd.Infrastructure\Qotd.Infrastructure.csproj", "{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qotd.Infrastructure", "Qotd.Infrastructure\Qotd.Infrastructure.csproj", "{5573B0FD-0D4F-40BC-8ADD-7584B36E9A80}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52C308B8-A3A1-4619-949D-CB22AD38F934}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+		.github\workflows\sonarqube.yml = .github\workflows\sonarqube.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
