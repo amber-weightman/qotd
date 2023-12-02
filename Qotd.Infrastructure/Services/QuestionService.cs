@@ -16,13 +16,10 @@ internal record QuestionService : IQuestionService
 
     public async Task<Metadata> Setup(Metadata? metadata, CancellationToken cancellationToken)
     {
-        var options = metadata is null ? null : new RequestOptions
-        {
-            AssistantId = metadata.Values.ContainsKey("AssistantId") ? metadata.Values["AssistantId"] : null,
-            ThreadId = metadata.Values.ContainsKey("ThreadId") ? metadata.Values["ThreadId"] : null
-        };
+        var assistantId = metadata is not null && metadata.Values.ContainsKey("AssistantId") ? metadata.Values["AssistantId"] : null;
+        var threadId = metadata is not null && metadata.Values.ContainsKey("ThreadId") ? metadata.Values["ThreadId"] : null;
 
-        var response = await _client.SetupThread(options.AssistantId, options.ThreadId, cancellationToken);
+        var response = await _client.SetupThread(assistantId, threadId, cancellationToken);
 
         return new Metadata
         {
@@ -37,13 +34,15 @@ internal record QuestionService : IQuestionService
 
     public async Task<RunResponse> GenerateQuestion(Metadata metadata, CancellationToken cancellationToken)
     {
-        var options = metadata is null ? null : new RequestOptions
-        {
-            AssistantId = metadata.Values.ContainsKey("AssistantId") ? metadata.Values["AssistantId"] : null,
-            ThreadId = metadata.Values.ContainsKey("ThreadId") ? metadata.Values["ThreadId"] : null
-        };
+        var assistantId = metadata.Values.ContainsKey("AssistantId") ? metadata.Values["AssistantId"] : null;
+        var threadId = metadata.Values.ContainsKey("ThreadId") ? metadata.Values["ThreadId"] : null;
 
-        var response = await _client.RequestQuestion(options.AssistantId, options.ThreadId, cancellationToken);
+        if (assistantId is null || threadId is null)
+        {
+            throw new ArgumentException("Metadata does not contain the expected values");
+        }
+
+        var response = await _client.RequestQuestion(assistantId, threadId, cancellationToken);
 
         return new RunResponse
         {
@@ -61,14 +60,14 @@ internal record QuestionService : IQuestionService
 
     public async Task<QuestionResponse> GetQuestion(Metadata metadata, string runId, CancellationToken cancellationToken)
     {
-        var options = metadata is null ? null : new RequestOptions
-        {
-            //AssistantId = metadata.Values.ContainsKey("AssistantId")  ? metadata.Values["AssistantId"] : null,
-            ThreadId = metadata.Values.ContainsKey("ThreadId") ? metadata.Values["ThreadId"] : null,
-            //RunId = metadata.Values.ContainsKey("RunId") ? metadata.Values["RunId"] : null
-        };
+        var threadId = metadata.Values.ContainsKey("ThreadId") ? metadata.Values["ThreadId"] : null;
 
-        var test = await _client.FetchQuestion(options.ThreadId, runId, cancellationToken);
+        if (threadId is null)
+        {
+            throw new ArgumentException("Metadata does not contain the expected values");
+        }
+
+        var test = await _client.FetchQuestion(threadId, runId, cancellationToken);
 
         return new QuestionResponse
         {
@@ -77,9 +76,7 @@ internal record QuestionService : IQuestionService
             {
                 Values = new Dictionary<string, string>
                 {
-                    //{ "AssistantId", test.AssistantId },
-                    { "ThreadId", test.ThreadId },
-                    //{ "RunId", test.RunId }
+                    { "ThreadId", test.ThreadId }
                 }
             }
         };

@@ -37,24 +37,24 @@ internal record AIClient : IAIClient
         return assistant;
     }
 
-    private async Task<AssistantResponse> GetAssistant(string assistantId, CancellationToken cancellationToken)
-    {
-        var assistant = await _client.AssistantsEndpoint.RetrieveAssistantAsync(assistantId, cancellationToken);
-        if (assistant is null)
-        {
-            throw new ApplicationException($"Failed to get Assistant {assistantId}");
-        }
-        return assistant;
-    }
+    //private async Task<AssistantResponse> GetAssistant(string assistantId, CancellationToken cancellationToken)
+    //{
+    //    var assistant = await _client.AssistantsEndpoint.RetrieveAssistantAsync(assistantId, cancellationToken);
+    //    if (assistant is null)
+    //    {
+    //        throw new ApplicationException($"Failed to get Assistant {assistantId}");
+    //    }
+    //    return assistant;
+    //}
 
-    private async Task DeleteAssistant(string assistantId, CancellationToken cancellationToken)
-    {
-        var isDeleted = await _client.AssistantsEndpoint.DeleteAssistantAsync(assistantId, cancellationToken);
-        if (!isDeleted)
-        {
-            throw new ApplicationException($"Failed to delete Assistant {assistantId}");
-        }
-    }
+    //private async Task DeleteAssistant(string assistantId, CancellationToken cancellationToken)
+    //{
+    //    var isDeleted = await _client.AssistantsEndpoint.DeleteAssistantAsync(assistantId, cancellationToken);
+    //    if (!isDeleted)
+    //    {
+    //        throw new ApplicationException($"Failed to delete Assistant {assistantId}");
+    //    }
+    //}
 
     private async Task<ThreadResponse> CreateThread(CancellationToken cancellationToken)
     {
@@ -70,17 +70,17 @@ internal record AIClient : IAIClient
 
     // More thread messages I haven't brought in...
 
-    private async Task<MessageResponse> CreateMessage(string threadId, CancellationToken cancellationToken)
-    {
-        var request = new CreateMessageRequest("give me a question please" );
-        var message = await _client.ThreadsEndpoint.CreateMessageAsync(threadId, request, cancellationToken);
+    //private async Task<MessageResponse> CreateMessage(string threadId, CancellationToken cancellationToken)
+    //{
+    //    var request = new CreateMessageRequest("give me a question please" );
+    //    var message = await _client.ThreadsEndpoint.CreateMessageAsync(threadId, request, cancellationToken);
 
-        if (message is null)
-        {
-            throw new ApplicationException("Failed to create Message");
-        }
-        return message;
-    }
+    //    if (message is null)
+    //    {
+    //        throw new ApplicationException("Failed to create Message");
+    //    }
+    //    return message;
+    //}
 
     private async Task<RunResponse> CreateRun(string threadId, string assistantId, CancellationToken cancellationToken)
     {

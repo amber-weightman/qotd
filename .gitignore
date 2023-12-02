@@ -16,4 +16,3 @@
 /.sonarqube
 /test/TestCoverage/*
 /test/TestResults/*
-/test/TestCoverage/*
