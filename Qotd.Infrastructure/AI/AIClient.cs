@@ -1,14 +1,18 @@
 ﻿using OpenAI;
 using OpenAI.Assistants;
 using OpenAI.Threads;
+using Qotd.Infrastructure.AI;
+using Qotd.Infrastructure.AI.Models;
 using System.Threading;
 
 namespace Qotd.Infrastructure.ChatGpt;
 
 internal interface IAIClient
 {
-    Task<AssistantResponse> CreateAssistant(string name, string instructions, CancellationToken cancellationToken);
-    Task<string?> Testing(CancellationToken cancellationToken);
+    Task<ResponseBase> SetupThread(CancellationToken cancellationToken);
+    Task<ResponseBase> SetupThread(string? assistantId, string? threadId, CancellationToken cancellationToken);
+    Task<ResponseBase> RequestQuestion(string assistantId, string threadId, CancellationToken cancellationToken);
+    Task<Response> FetchQuestion(string threadId, string runId, CancellationToken cancellationToken);
 }
 
 internal record AIClient : IAIClient
@@ -22,7 +26,7 @@ internal record AIClient : IAIClient
         _client = client;
     }
 
-    public async Task<AssistantResponse> CreateAssistant(string name, string instructions, CancellationToken cancellationToken)
+    private async Task<AssistantResponse> CreateAssistant(string name, string instructions, CancellationToken cancellationToken)
     {
         var request = new CreateAssistantRequest(model: Model, name: name, instructions: instructions);
         var assistant = await _client.AssistantsEndpoint.CreateAssistantAsync(request, cancellationToken);
@@ -106,32 +110,113 @@ internal record AIClient : IAIClient
         {
             throw new ApplicationException("Failed to get Messages");
         }
-
-        foreach (var message in messageList.Items)
-        {
-            Console.WriteLine($"{message.Id}: {message.Role}: {message.PrintContent()}");
-        }
-
-
         return messageList;
     }
 
-    public async Task<string?> Testing(CancellationToken cancellationToken)
+    // https://github.com/RageAgainstThePixel/OpenAI-DotNet#assistants
+
+    //private async Task<RequestOptions> ValidateOptions(RequestOptions? options, CancellationToken cancellationToken)
+    //{
+    //    RequestOptions newOptions;
+    //    if (options is null || options.RunId is null)
+    //    {
+    //        var setupResponse = await SetupThread(options, cancellationToken);
+    //        newOptions = new RequestOptions
+    //        {
+    //            AssistantId = setupResponse.AssistantId,
+    //            ThreadId = setupResponse.ThreadId,
+    //            RunId = setupResponse.RunId
+    //        };
+    //    }
+    //    else
+    //    {
+    //        newOptions = options;
+    //    }
+    //    if (newOptions.ThreadId is null || newOptions.RunId is null)
+    //    {
+    //        throw new ApplicationException();
+    //    }
+    //    return newOptions;
+    //}
+
+    // https://github.com/RageAgainstThePixel/OpenAI-DotNet#assistants
+
+    /// <summary>
+    /// Create a new assistant (if not already existing) and a new thread (if not already existing)
+    /// </summary>
+    public async Task<ResponseBase> SetupThread(string? assistantId, string? threadId, CancellationToken cancellationToken)
     {
-        // https://github.com/RageAgainstThePixel/OpenAI-DotNet#assistants
+        string assistantId2 = assistantId ?? (await CreateAssistant(Constants.Common.AssistantName, InstructionsBuilder.GetInstructions(), cancellationToken)).Id;
+        string threadId2 = threadId ?? (await CreateThread(cancellationToken)).Id;
 
-        var assistant = await CreateAssistant("Manager", "You are a manager of a remote team. When you run meetings, you always ask a \"question of the day\" as a fun, non-work-related get-to-know-you and icebreaker question, before the meeting begins. Answer questions with a single question (your answer should not be presented as a list). There should be good variety between each question, day to day and week to week. Sometimes they can be more serious (but still not work-related) and sometimes they can be lighthearted and funny or silly. Questions should not be repeated.", cancellationToken);
-
-        var threadRequest = await CreateThread(cancellationToken);
-        var run = await CreateRun(threadRequest.Id, assistant.Id, cancellationToken);
-        do
+        return new ResponseBase
         {
-            Thread.Sleep(1000);
-            run = await GetRun(threadRequest.Id, run.Id, cancellationToken);
-        } while ((run.Status == RunStatus.Queued || run.Status == RunStatus.InProgress) && !cancellationToken.IsCancellationRequested);
+            AssistantId = assistantId2,
+            ThreadId = threadId2,
+            RunId = null
+        };
+    }
 
-        var messages = await GetMessages(threadRequest.Id, cancellationToken);
+    /// <summary>
+    /// Create a new assistant and a new thread
+    /// </summary>
+    public async Task<ResponseBase> SetupThread(CancellationToken cancellationToken)
+    {
+        string assistantId = (await CreateAssistant(Constants.Common.AssistantName, InstructionsBuilder.GetInstructions(), cancellationToken)).Id;
+        string threadId = (await CreateThread(cancellationToken)).Id;
 
-        return messages.Items?.FirstOrDefault()?.Content?.FirstOrDefault()?.Text?.Value;
+        return new ResponseBase
+        {
+            AssistantId = assistantId,
+            ThreadId = threadId,
+            RunId = null
+        };
+    }
+
+    /// <summary>
+    /// Create a new run (initiate requesting a question)
+    /// </summary>
+    public async Task<ResponseBase> RequestQuestion(string assistantId, string threadId, CancellationToken cancellationToken)
+    {
+        string runId;        
+        try
+        {
+            runId = (await CreateRun(threadId, assistantId, cancellationToken)).Id;
+        }
+        catch (HttpRequestException e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            // Assistant and/or thread may no longer exist on the server, so setup a fresh thread and run that instead
+
+            var newNewOptions = await SetupThread(cancellationToken);
+            threadId = newNewOptions.ThreadId; // TODO shouldn't be re-assigning incoming args
+            assistantId = newNewOptions.AssistantId;
+            runId = (await CreateRun(threadId, newNewOptions.AssistantId, cancellationToken)).Id;
+        }
+
+        return new ResponseBase
+        {
+            ThreadId = threadId,
+            AssistantId = assistantId,
+            RunId = runId
+        };
+    }
+
+    public async Task<Response> FetchQuestion(string threadId, string runId, CancellationToken cancellationToken)
+    {
+        RunResponse run = await GetRun(threadId, runId, cancellationToken);
+        while ((run.Status == RunStatus.Queued || run.Status == RunStatus.InProgress) && !cancellationToken.IsCancellationRequested)
+        {
+            Thread.Sleep(500);
+            run = await GetRun(threadId, runId, cancellationToken);
+        }
+
+        var messages = await GetMessages(threadId, cancellationToken);
+
+        return new Response
+        {
+            Question = messages.Items.FirstOrDefault()?.Content?.FirstOrDefault()?.Text?.Value,
+            ThreadId = threadId,
+            RunId = runId
+        };
     }
 }

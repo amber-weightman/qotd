@@ -15,7 +15,13 @@ function App() {
   const lookupQuestion = async () => {
     setLoading(true);
     setQuestion(undefined);
-    const response = await fetch('question');
+    console.log('setting up');
+    await fetch('question/setup');
+    console.log('running');
+    const runId = await fetch('question/generate-question');
+    const r: string = await runId.text();
+    console.log('runid ' + r);
+    const response = await fetch('question/get-question/'+r);
     const data: string = await response.text();
     setQuestion(data);
     console.log(data);

@@ -7,11 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Betalgo.OpenAI" Version="7.4.1" />-->
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="OpenAI-DotNet" Version="7.3.5" />
-    <!--<PackageReference Include="Forge.OpenAI" Version="1.1.6" />-->
   </ItemGroup>
 
   <ItemGroup>

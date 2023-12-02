@@ -1,6 +1,10 @@
-﻿namespace Qotd.Application.Interfaces;
+﻿using Qotd.Application.Models;
+
+namespace Qotd.Application.Interfaces;
 
 public interface IQuestionService
 {
-    public Task<string> GetQuestion(CancellationToken cancellationToken);
+    Task<Metadata> Setup(Metadata? metadata, CancellationToken cancellationToken);
+    Task<RunResponse> GenerateQuestion(Metadata metadata, CancellationToken cancellationToken);
+    Task<QuestionResponse> GetQuestion(Metadata metadata, CancellationToken cancellationToken);
 }
