@@ -8,25 +8,25 @@ public class MetadataCookiesFilter : ActionFilterAttribute
 {
     private static CookieOptions CookieOptions = new CookieOptions { Expires = DateTime.Now.AddYears(1) };
 
-    public override void OnActionExecuting(ActionExecutingContext filterContext)
+    public override void OnActionExecuting(ActionExecutingContext context)
     {
-        if (filterContext.Controller is not IMetadataController controller)
+        if (context.Controller is not IMetadataController controller)
         {
             return;
         }
 
-        var metadata = GetMetadata(filterContext.HttpContext);
+        var metadata = GetMetadata(context.HttpContext);
         controller.Metadata = metadata;
     }
 
-    public override void OnActionExecuted(ActionExecutedContext filterContext)
+    public override void OnActionExecuted(ActionExecutedContext context)
     {
-        if (filterContext.Controller is not IMetadataController controller)
+        if (context.Controller is not IMetadataController controller)
         {
             return;
         }
 
-        UpdateMetadata(filterContext.HttpContext, controller.Metadata);
+        UpdateMetadata(context.HttpContext, controller.Metadata);
     }
 
     private Metadata GetMetadata(HttpContext context)

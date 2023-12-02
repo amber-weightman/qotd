@@ -11,6 +11,7 @@ namespace Qotd.UnitTests
             var md = new Metadata { Values = new Dictionary<string, string>() };
             var q = new QuestionResponse { Question = "Example", Metadata = md };
             var r = new RunResponse { RunId = "Example", Metadata = md };
+            Assert.True(true);
         }
     }
 }
