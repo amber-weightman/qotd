@@ -59,16 +59,16 @@ internal record QuestionService : IQuestionService
         };
     }
 
-    public async Task<QuestionResponse> GetQuestion(Metadata metadata, CancellationToken cancellationToken)
+    public async Task<QuestionResponse> GetQuestion(Metadata metadata, string runId, CancellationToken cancellationToken)
     {
         var options = metadata is null ? null : new RequestOptions
         {
             //AssistantId = metadata.Values.ContainsKey("AssistantId")  ? metadata.Values["AssistantId"] : null,
             ThreadId = metadata.Values.ContainsKey("ThreadId") ? metadata.Values["ThreadId"] : null,
-            RunId = metadata.Values.ContainsKey("RunId") ? metadata.Values["RunId"] : null
+            //RunId = metadata.Values.ContainsKey("RunId") ? metadata.Values["RunId"] : null
         };
 
-        var test = await _client.FetchQuestion(options.ThreadId, options.RunId, cancellationToken);
+        var test = await _client.FetchQuestion(options.ThreadId, runId, cancellationToken);
 
         return new QuestionResponse
         {

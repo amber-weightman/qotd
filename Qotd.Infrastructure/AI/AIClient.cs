@@ -103,6 +103,17 @@ internal record AIClient : IAIClient
         return run;
     }
 
+    private async Task<RunResponse> GetLatestRun(string threadId, CancellationToken cancellationToken)
+    {
+        var request = new ListQuery { Limit = 1, Order = SortOrder.Descending };
+        var runs = await _client.ThreadsEndpoint.ListRunsAsync(threadId, request, cancellationToken);
+        if (runs is null)
+        {
+            throw new ApplicationException("Failed to get Run");
+        }
+        return runs.Items?.SingleOrDefault();
+    }
+
     private async Task<ListResponse<MessageResponse>> GetMessages(string threadId, CancellationToken cancellationToken)
     {
         var messageList = await _client.ThreadsEndpoint.ListMessagesAsync(threadId, null, cancellationToken);
@@ -178,7 +189,7 @@ internal record AIClient : IAIClient
     /// </summary>
     public async Task<ResponseBase> RequestQuestion(string assistantId, string threadId, CancellationToken cancellationToken)
     {
-        string runId;        
+        string runId;
         try
         {
             runId = (await CreateRun(threadId, assistantId, cancellationToken)).Id;
@@ -191,6 +202,24 @@ internal record AIClient : IAIClient
             threadId = newNewOptions.ThreadId; // TODO shouldn't be re-assigning incoming args
             assistantId = newNewOptions.AssistantId;
             runId = (await CreateRun(threadId, newNewOptions.AssistantId, cancellationToken)).Id;
+        }
+        catch (HttpRequestException e) when (e.StatusCode == System.Net.HttpStatusCode.BadRequest && e.Message.Contains("already has an active run"))
+        {
+            // TODO parse the message more efficiently
+            //CreateRunAsync Failed! HTTP status code: BadRequest | Response body: {
+            //"error": {
+            //  "message": "Thread thread_oKFhhGiG0C6uzzHtew0iA48v already has an active run run_1KzjUHFRWg8N7JlvgW37cLJp.",
+            //  "type": "invalid_request_error",
+            //  "param": null,
+            //  "code": null
+            //}
+
+            var run = await GetLatestRun(threadId, cancellationToken);
+            if (run.Id is null)
+            {
+                throw;
+            }
+            runId = run.Id;
         }
 
         return new ResponseBase
