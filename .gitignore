@@ -12,3 +12,8 @@
 /Qotd.Infrastructure/obj/*
 /test/Qotd.UnitTests/bin/*
 /test/Qotd.UnitTests/obj/*
+/.sonar/*
+/.sonarqube
+/test/TestCoverage/*
+/test/TestResults/*
+/test/TestCoverage/*
