@@ -5,23 +5,77 @@ import AppMenu from './components/AppMenu';
 import QuestionDisplay from './components/QuestionDisplay';
 
 function App() {
+  const [runId, setRunId] = useState<string>();
   const [question, setQuestion] = useState<string>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [initialised, setInitialised] = useState(false);
   
   useEffect(() => {
-    lookupQuestion();
-  }, []);
+    //let ignore = false; // https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development
+    init();
+
+  }, [initialised]);
+
+  useEffect(() => {
+    init2();
+  }, [initialised]);
+
+  useEffect(() => {
+    lookupInitialQuestion();
+  }, [runId]);
+
+  const init = async () => {
+    if (initialised) {
+      return;
+    }
+        
+    await fetch('question/setup');
+    setInitialised(true);
+  }
+
+  const init2 = async () => {
+    if (!initialised || runId) {
+      return;
+    }
+
+    const response = await fetch('question/generate-question');
+    const r: string = await response.text();
+    setRunId(r);
+  }
+
+  const lookupInitialQuestion = async () => {
+    if (!initialised) {
+      return;
+    }
+
+    if (!runId) {
+      return;
+    }
+
+    const response = await fetch('question/get-question/' + runId);
+
+    const data: string = await response.text();
+    setQuestion(data);
+    console.log(data);
+    setLoading(false);
+  }
 
   const lookupQuestion = async () => {
+    if (!initialised) {
+      return;
+    }
+
+    await init2();
+
+    if (!runId) {
+      return;
+    }
+
     setLoading(true);
     setQuestion(undefined);
-    console.log('setting up');
-    await fetch('question/setup');
-    console.log('running');
-    const runId = await fetch('question/generate-question');
-    const r: string = await runId.text();
-    console.log('runid ' + r);
-    const response = await fetch('question/get-question/'+r);
+
+
+    const response = await fetch('question/get-question/' + runId);
     const data: string = await response.text();
     setQuestion(data);
     console.log(data);
