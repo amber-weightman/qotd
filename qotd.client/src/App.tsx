@@ -65,7 +65,9 @@ function App() {
       return;
     }
 
-    await init2();
+    const response1 = await fetch('question/generate-question');
+    const r: string = await response1.text();
+    setRunId(r);
 
     if (!runId) {
       return;

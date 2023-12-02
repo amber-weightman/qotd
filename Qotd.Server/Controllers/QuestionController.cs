@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
 using Qotd.Api.Controllers;
 using Qotd.Api.Filters;
 using Qotd.Application.Interfaces;
@@ -21,7 +20,7 @@ public class QuestionController : ControllerBase, IMetadataController
     }
 
     [MetadataCookiesFilter]
-    [OutputCache(Duration = 5)]
+    [ResponseCache(VaryByHeader = "User-Agent", Duration = 10)]
     [HttpGet("setup")]
     public async Task Setup(CancellationToken cancellationToken)
     {
@@ -30,7 +29,7 @@ public class QuestionController : ControllerBase, IMetadataController
     }
 
     [MetadataCookiesFilter]
-    [OutputCache(Duration = 5)]
+    [ResponseCache(VaryByHeader = "User-Agent", Duration = 2)]
     [HttpGet("generate-question")]
     public async Task<string> GenerateQuestion(CancellationToken cancellationToken)
     {
@@ -42,6 +41,7 @@ public class QuestionController : ControllerBase, IMetadataController
     }
 
     [MetadataCookiesFilter]
+    [ResponseCache(VaryByHeader = "User-Agent", Duration = 2)]
     [HttpGet("get-question/{runId}")]
     public async Task<string> GetQuestion([FromRoute]string runId, CancellationToken cancellationToken)
     {
