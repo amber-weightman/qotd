@@ -2,7 +2,7 @@
 
 public record RunResponse
 {
-    public string RunId { get; init; } = null!;
+    public string QuestionId { get; init; } = null!;
 
     public Metadata Metadata { get; init; } = null!;
 }

@@ -5,7 +5,7 @@ import AppMenu from './components/AppMenu';
 import QuestionDisplay from './components/QuestionDisplay';
 
 function App() {
-  const [runId, setRunId] = useState<string>();
+  const [questionId, setQuestionId] = useState<string>();
   const [question, setQuestion] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [initialised, setInitialised] = useState(false);
@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     lookupInitialQuestion();
-  }, [runId]);
+  }, [questionId]);
 
   const init = async () => {
     if (initialised) {
@@ -34,13 +34,13 @@ function App() {
   }
 
   const init2 = async () => {
-    if (!initialised || runId) {
+    if (!initialised || questionId) {
       return;
     }
 
     const response = await fetch('question/generate-question');
     const r: string = await response.text();
-    setRunId(r);
+    setQuestionId(r);
   }
 
   const lookupInitialQuestion = async () => {
@@ -48,11 +48,11 @@ function App() {
       return;
     }
 
-    if (!runId) {
+    if (!questionId) {
       return;
     }
 
-    const response = await fetch('question/get-question/' + runId);
+    const response = await fetch('question/get-question/' + questionId);
 
     const data: string = await response.text();
     setQuestion(data);
@@ -67,9 +67,9 @@ function App() {
 
     const response1 = await fetch('question/generate-question');
     const r: string = await response1.text();
-    setRunId(r);
+    setQuestionId(r);
 
-    if (!runId) {
+    if (!questionId) {
       return;
     }
 
@@ -77,7 +77,7 @@ function App() {
     setQuestion(undefined);
 
 
-    const response = await fetch('question/get-question/' + runId);
+    const response = await fetch('question/get-question/' + questionId);
     const data: string = await response.text();
     setQuestion(data);
     console.log(data);

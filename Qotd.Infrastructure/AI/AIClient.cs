@@ -3,7 +3,9 @@ using OpenAI.Assistants;
 using OpenAI.Threads;
 using Qotd.Infrastructure.AI;
 using Qotd.Infrastructure.AI.Models;
-using System.Threading;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace Qotd.Infrastructure.ChatGpt;
 
@@ -13,6 +15,7 @@ internal interface IAIClient
     Task<ResponseBase> SetupThread(string? assistantId, string? threadId, CancellationToken cancellationToken);
     Task<ResponseBase> RequestQuestion(string assistantId, string threadId, CancellationToken cancellationToken);
     Task<Response> FetchQuestion(string threadId, string runId, CancellationToken cancellationToken);
+    Task Delete(string assistantId, string threadId, CancellationToken cancellationToken);
 }
 
 internal record AIClient : IAIClient
@@ -37,28 +40,31 @@ internal record AIClient : IAIClient
         return assistant;
     }
 
-    //private async Task<AssistantResponse> GetAssistant(string assistantId, CancellationToken cancellationToken)
-    //{
-    //    var assistant = await _client.AssistantsEndpoint.RetrieveAssistantAsync(assistantId, cancellationToken);
-    //    if (assistant is null)
-    //    {
-    //        throw new ApplicationException($"Failed to get Assistant {assistantId}");
-    //    }
-    //    return assistant;
-    //}
-
-    //private async Task DeleteAssistant(string assistantId, CancellationToken cancellationToken)
-    //{
-    //    var isDeleted = await _client.AssistantsEndpoint.DeleteAssistantAsync(assistantId, cancellationToken);
-    //    if (!isDeleted)
-    //    {
-    //        throw new ApplicationException($"Failed to delete Assistant {assistantId}");
-    //    }
-    //}
+    public async Task Delete(string assistantId, string threadId, CancellationToken cancellationToken)
+    {
+        var threadDeleted = await _client.ThreadsEndpoint.DeleteThreadAsync(threadId, cancellationToken);
+        var assistantDeleted = await _client.AssistantsEndpoint.DeleteAssistantAsync(assistantId, cancellationToken);
+        if (!threadDeleted && !assistantDeleted)
+        {
+            throw new AggregateException(new[]
+                {
+                    new ApplicationException($"Failed to delete Assistant {assistantId}"),
+                    new ApplicationException($"Failed to delete Thread {threadId}")
+                });
+        } 
+        else if (!assistantDeleted)
+        {
+            throw new ApplicationException($"Failed to delete Assistant {assistantId}");
+        }
+        else if (!threadDeleted)
+        {
+            throw new ApplicationException($"Failed to delete Thread {threadId}");
+        }
+    }
 
     private async Task<ThreadResponse> CreateThread(CancellationToken cancellationToken)
     {
-        var messages = new List<Message> { "give me a question please" };
+        var messages = new List<Message> { InstructionsBuilder.GetPrompt() };
         var request = new CreateThreadRequest(messages);
         var thread = await _client.ThreadsEndpoint.CreateThreadAsync(request, cancellationToken);
         if (thread is null)
@@ -67,20 +73,6 @@ internal record AIClient : IAIClient
         }
         return thread;
     }
-
-    // More thread messages I haven't brought in...
-
-    //private async Task<MessageResponse> CreateMessage(string threadId, CancellationToken cancellationToken)
-    //{
-    //    var request = new CreateMessageRequest("give me a question please" );
-    //    var message = await _client.ThreadsEndpoint.CreateMessageAsync(threadId, request, cancellationToken);
-
-    //    if (message is null)
-    //    {
-    //        throw new ApplicationException("Failed to create Message");
-    //    }
-    //    return message;
-    //}
 
     private async Task<RunResponse> CreateRun(string threadId, string assistantId, CancellationToken cancellationToken)
     {

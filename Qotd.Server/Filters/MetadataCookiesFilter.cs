@@ -8,6 +8,18 @@ public class MetadataCookiesFilter : ActionFilterAttribute
 {
     private static CookieOptions CookieOptions = new CookieOptions { Expires = DateTime.Now.AddYears(1) };
 
+    private readonly bool _delete;
+
+    public MetadataCookiesFilter()
+    {
+
+    }
+
+    public MetadataCookiesFilter(bool delete)
+    {
+        _delete = delete;
+    }
+
     public override void OnActionExecuting(ActionExecutingContext context)
     {
         if (context.Controller is not IMetadataController controller)
@@ -26,7 +38,15 @@ public class MetadataCookiesFilter : ActionFilterAttribute
             return;
         }
 
-        UpdateMetadata(context.HttpContext, controller.Metadata);
+        if (_delete)
+        {
+            DeleteCookies(context.HttpContext);
+        }
+        else
+        {
+            UpdateMetadata(context.HttpContext, controller.Metadata);
+        }
+
     }
 
     private Metadata GetMetadata(HttpContext context)
@@ -48,6 +68,17 @@ public class MetadataCookiesFilter : ActionFilterAttribute
         foreach (var m in metadata.Values)
         {
             context.Response.Cookies.Append($"{Cookies.Cookies.CookiePrefix}{m.Key}", m.Value, CookieOptions);
+        }
+    }
+
+    private void DeleteCookies(HttpContext context)
+    {
+        var cookiesToDelete = context.Request.Cookies
+            .Where(c => c.Key.StartsWith(Cookies.Cookies.CookiePrefix));
+
+        foreach (var m in cookiesToDelete)
+        {
+            context.Response.Cookies.Delete($"{Cookies.Cookies.CookiePrefix}{m.Key}");
         }
     }
 }

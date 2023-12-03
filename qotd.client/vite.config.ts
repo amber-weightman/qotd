@@ -47,7 +47,8 @@ export default defineConfig({
     server: {
         proxy: {
             '^/question': {
-                target: 'https://localhost:7011/',
+                target: 'https://localhost:7011/', 
+                //target: 'https://questionoftheday.azurewebsites.net/',
                 secure: false
             }
         },
