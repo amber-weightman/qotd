@@ -1,4 +1,5 @@
-@Qotd.Server_HostAddress = http://localhost:5167
+# @Qotd.Server_HostAddress = http://localhost:5167
+@Qotd.Server_HostAddress = https://questionoftheday.azurewebsites.net/
 
 GET {{Qotd.Server_HostAddress}}/question/get-question
 Accept: application/json
