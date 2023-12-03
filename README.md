@@ -9,6 +9,10 @@ Everybody loves "Question of the Day"
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=amber-weightman_qotd&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=amber-weightman_qotd)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=amber-weightman_qotd&metric=coverage)](https://sonarcloud.io/summary/new_code?id=amber-weightman_qotd)
 
+Site: https://questionoftheday.azurewebsites.net
+
+API: https://questionoftheday.azurewebsites.net/swagger
+
 ## Usage
 
 TBA
