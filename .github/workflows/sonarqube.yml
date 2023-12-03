@@ -10,10 +10,10 @@ jobs:
     name: Build and analyze
     runs-on: windows-latest
     steps:
-      - name: Set up Java JDK
-        uses: actions/setup-java@v4.0.0
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
         with:
-          java-version: 21.0.1
+          java-version: 1.11
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -50,7 +50,7 @@ jobs:
           dotnet test --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=TestResults.trx" --results-directory ./test/TestResults
 
           dotnet tool install --global dotnet-trx2sonar
-          dotnet-trx2sonar -d ./ -o ./test/TestResults/SonarTestResults.xml
+          dotnet-trx2sonar -d ./ -o ./test/TestResults/SonarTestResults.xml # You must install or update .NET to run this application.
 
           dotnet tool install -g dotnet-reportgenerator-globaltool
           reportgenerator "-reports:.\test\TestResults\*\coverage.cobertura.xml" "-targetdir:./test/TestCoverage" "-reporttypes:SonarQube"
