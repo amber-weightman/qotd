@@ -16,11 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Export variables from secret
-        run: |
-          ENV_JSON='${{ secrets.APPSETTINGS }}'
-          echo "$ENV_JSON" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
-
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
@@ -28,6 +23,10 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
+        env:
+            SecretsTest: ${{ secrets.SECRETSTEST }}
+            OpenAI:apiKey: ${{ secrets.OPENAI_APIKEY }}
+            OpenAI:organization: ${{ secrets.OPENAI_ORGANIZATION }}
         run: dotnet build --configuration Release
 
       - name: dotnet publish

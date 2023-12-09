@@ -14,7 +14,10 @@ public static class DependencyInjection
         services.AddTransient<IQuestionService, QuestionService>();
         services.AddTransient<IAIClient, AIClient>();
 
-        var configBuilder = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+        var configBuilder = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddUserSecrets<Qotd.Infrastructure.Services.QuestionService>()
+            .Build();
 
         //https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
         services.AddHttpClient<OpenAI.OpenAIClient>("AIHttpClient");
