@@ -29,7 +29,7 @@ public static class DependencyInjection
             var clientFactory = ctx.GetRequiredService<IHttpClientFactory>();
             var httpClient = clientFactory.CreateClient("AIHttpClient");
 
-            return new OpenAI.OpenAIClient(auth, null, httpClient); 
+            return new OpenAIClient(auth, null, httpClient); 
         });
 
 

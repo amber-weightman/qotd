@@ -71,7 +71,7 @@ public class MetadataCookiesFilter : ActionFilterAttribute
         }
     }
 
-    private void DeleteCookies(HttpContext context)
+    private static void DeleteCookies(HttpContext context)
     {
         var cookiesToDelete = context.Request.Cookies
             .Where(c => c.Key.StartsWith(Cookies.Cookies.CookiePrefix));

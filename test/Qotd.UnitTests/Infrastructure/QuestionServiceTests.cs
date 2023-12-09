@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using NSubstitute;
-using Qotd.Application.Interfaces;
 using Qotd.Application.Models;
 using Qotd.Infrastructure.AI.Models;
 using Qotd.Infrastructure.ChatGpt;
@@ -13,7 +12,7 @@ public class QuestionServiceTests
     private static string _mockAssistantId = "aaa";
     private static string _mockThreadId = "bbb";
 
-    private readonly IQuestionService _service;
+    private readonly QuestionService _service;
 
     public QuestionServiceTests()
     {

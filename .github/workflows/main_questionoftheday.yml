@@ -16,6 +16,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Export variables from secret
+        run: |
+          ENV_JSON='${{ secrets.APPSETTINGS }}'
+          echo "$ENV_JSON" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v1
         with:
@@ -55,3 +60,4 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87DB63330AEE486BB30C637888F4DD28 }}
           package: .
+

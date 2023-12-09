@@ -15,17 +15,15 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.ConfigureApplication();
 builder.Services.ConfigureInfrastructure();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
@@ -34,5 +32,17 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
+
+// TODO gotta work out which hosts I'll actually be using
+// TODO add to swagger
+app.MapHealthChecks("/health")
+    .RequireHost("*:7011", 
+        "*:5001",
+        "*:5173",
+        "questionoftheday.azurewebsites.net:*", 
+        "www.questionoftheday.azurewebsites.net:*",
+        "builtbyamber.com:*"
+    );
+    //.RequireAuthorization();
 
 app.Run();
