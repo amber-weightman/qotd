@@ -1,7 +1,15 @@
+using Azure.Identity;
 using Qotd.Application;
 using Qotd.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//if (builder.Environment.IsProduction())
+//{
+    builder.Configuration.AddAzureKeyVault(
+        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
+        new DefaultAzureCredential());
+//}
 
 // Add services to the container.
 
@@ -43,6 +51,6 @@ app.MapHealthChecks("/health")
         "www.questionoftheday.azurewebsites.net:*",
         "builtbyamber.com:*"
     );
-    //.RequireAuthorization();
+//.RequireAuthorization();
 
 app.Run();
