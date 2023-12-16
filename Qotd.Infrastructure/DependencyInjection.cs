@@ -4,9 +4,11 @@ using OpenAI;
 using Qotd.Application.Interfaces;
 using Qotd.Infrastructure.ChatGpt;
 using Qotd.Infrastructure.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Qotd.Infrastructure;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     public static IServiceCollection ConfigureInfrastructure(this IServiceCollection services)

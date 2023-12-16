@@ -32,10 +32,12 @@ internal record QuestionService : IQuestionService
 
     public async Task<RunResponse> GenerateQuestion(Metadata metadata, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(metadata);
+
         metadata.Values.TryGetValue("AssistantId", out var assistantId);
         metadata.Values.TryGetValue("ThreadId", out var threadId);
 
-        if (assistantId is null || threadId is null)
+        if (string.IsNullOrEmpty(assistantId) || string.IsNullOrEmpty(threadId))
         {
             throw new ArgumentException("Metadata does not contain the expected values");
         }
@@ -58,9 +60,11 @@ internal record QuestionService : IQuestionService
 
     public async Task<QuestionResponse> GetQuestion(Metadata metadata, string runId, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(metadata);
+
         metadata.Values.TryGetValue("ThreadId", out var threadId);
 
-        if (threadId is null)
+        if (string.IsNullOrEmpty(threadId) || string.IsNullOrEmpty(runId))
         {
             throw new ArgumentException("Metadata does not contain the expected values");
         }
@@ -82,10 +86,12 @@ internal record QuestionService : IQuestionService
 
     public async Task Delete(Metadata metadata, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(metadata);
+
         metadata.Values.TryGetValue("AssistantId", out var assistantId);
         metadata.Values.TryGetValue("ThreadId", out var threadId);
 
-        if (assistantId is null || threadId is null)
+        if (string.IsNullOrEmpty(assistantId) || string.IsNullOrEmpty(threadId))
         {
             throw new ArgumentException("Metadata does not contain the expected values");
         }

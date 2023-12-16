@@ -40,28 +40,6 @@ internal record AIClient : IAIClient
         return assistant;
     }
 
-    public async Task Delete(string assistantId, string threadId, CancellationToken cancellationToken)
-    {
-        var threadDeleted = await _client.ThreadsEndpoint.DeleteThreadAsync(threadId, cancellationToken);
-        var assistantDeleted = await _client.AssistantsEndpoint.DeleteAssistantAsync(assistantId, cancellationToken);
-        if (!threadDeleted && !assistantDeleted)
-        {
-            throw new AggregateException(new[]
-                {
-                    new ApplicationException($"Failed to delete Assistant {assistantId}"),
-                    new ApplicationException($"Failed to delete Thread {threadId}")
-                });
-        } 
-        else if (!assistantDeleted)
-        {
-            throw new ApplicationException($"Failed to delete Assistant {assistantId}");
-        }
-        else if (!threadDeleted)
-        {
-            throw new ApplicationException($"Failed to delete Thread {threadId}");
-        }
-    }
-
     private async Task<ThreadResponse> CreateThread(CancellationToken cancellationToken)
     {
         var messages = new List<Message> { InstructionsBuilder.GetPrompt() };
@@ -240,4 +218,27 @@ internal record AIClient : IAIClient
             RunId = runId
         };
     }
+
+    public async Task Delete(string assistantId, string threadId, CancellationToken cancellationToken)
+    {
+        var threadDeleted = await _client.ThreadsEndpoint.DeleteThreadAsync(threadId, cancellationToken);
+        var assistantDeleted = await _client.AssistantsEndpoint.DeleteAssistantAsync(assistantId, cancellationToken);
+        if (!threadDeleted && !assistantDeleted)
+        {
+            throw new AggregateException(new[]
+                {
+                    new ApplicationException($"Failed to delete Assistant {assistantId}"),
+                    new ApplicationException($"Failed to delete Thread {threadId}")
+                });
+        }
+        else if (!assistantDeleted)
+        {
+            throw new ApplicationException($"Failed to delete Assistant {assistantId}");
+        }
+        else if (!threadDeleted)
+        {
+            throw new ApplicationException($"Failed to delete Thread {threadId}");
+        }
+    }
+
 }
