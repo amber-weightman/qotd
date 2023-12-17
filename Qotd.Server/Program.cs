@@ -7,8 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddUserSecrets<QuestionController>();
 builder.Configuration.ConfigureAzure();
-
-builder.Services.AddAzureAppConfiguration();
+//builder.Services.AddAzureAppConfiguration();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,7 +23,7 @@ builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-app.UseAzureAppConfiguration();
+//app.UseAzureAppConfiguration();
 
 
 app.Logger.LogInformation("Adding Routes");

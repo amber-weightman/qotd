@@ -11,8 +11,7 @@ public static class DependencyInjection
         configuration.AddAzureAppConfiguration(options =>
         {
             options.Connect(
-                "Endpoint=https://questionoftheday.azconfig.io;Id=SL46;Secret=STQlDTKrj5gKx3/xPpCDRG4SfM9nSmEy/XJHt/cciYE=")
-                    //configuration["ConnectionStrings:AppConfig"])
+                    configuration["ConnectionStrings:AppConfig"])
                     .ConfigureKeyVault(kv =>
                     {
                         kv.SetCredential(new DefaultAzureCredential());
