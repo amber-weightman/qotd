@@ -1,4 +1,4 @@
-name: Build and push test results to SonarCloud
+name: SONARCLOUD - Build and push test results to SonarCloud - https://sonarcloud.io/project/overview?id=amber-weightman_qotd
 
 on:
   # Trigger analysis when pushing in master or pull requests, and when creating
