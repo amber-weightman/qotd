@@ -11,15 +11,10 @@ namespace Qotd.Infrastructure;
 [ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
-    public static IServiceCollection ConfigureInfrastructure(this IServiceCollection services)
+    public static IServiceCollection ConfigureInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddTransient<IQuestionService, QuestionService>();
         services.AddTransient<IAIClient, AIClient>();
-
-        var configBuilder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .AddUserSecrets<Qotd.Infrastructure.Services.QuestionService>()
-            .Build();
 
         //https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
         services.AddHttpClient<OpenAI.OpenAIClient>("AIHttpClient");
@@ -29,16 +24,15 @@ public static class DependencyInjection
         // https://github.com/RageAgainstThePixel/OpenAI-DotNet#use-system-environment-variables
         services.AddTransient<OpenAIClient>(ctx =>
         {
-            var auth = new OpenAIAuthentication(configBuilder.GetValue<string>("OpenAI:apiKey"), configBuilder.GetValue<string>("OpenAI:organization"));
+            var auth = new OpenAIAuthentication(
+                configuration.GetValue<string>("OpenAI:apiKey"), 
+                configuration.GetValue<string>("OpenAI:organization"));
 
             var clientFactory = ctx.GetRequiredService<IHttpClientFactory>();
             var httpClient = clientFactory.CreateClient("AIHttpClient");
 
             return new OpenAIClient(auth, null, httpClient); 
         });
-
-
-        
 
         return services;
     }

@@ -1,12 +1,14 @@
 using Qotd.Application;
 using Qotd.Api;
 using Qotd.Infrastructure;
+using Qotd.Server.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddUserSecrets<QuestionController>();
 builder.Configuration.ConfigureAzure();
-builder.Services.AddAzureAppConfiguration();
 
+builder.Services.AddAzureAppConfiguration();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -16,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.ConfigureApplication();
-builder.Services.ConfigureInfrastructure();
+builder.Services.ConfigureInfrastructure(builder.Configuration);
 
 builder.Services.AddHealthChecks();
 
