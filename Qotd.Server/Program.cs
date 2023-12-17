@@ -1,45 +1,12 @@
-using Azure.Identity;
 using Qotd.Application;
+using Qotd.Api;
 using Qotd.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
-// AADSTS500200: User account 'amberweightman@hotmail.com' is a personal Microsoft account. Personal Microsoft accounts are not
-// supported for this application unless explicitly invited to an organization. Try signing out and signing back in with an organizational account.
 
+builder.Configuration.ConfigureAzure();
+builder.Services.AddAzureAppConfiguration();
 
-var options = new DefaultAzureCredentialOptions()
-{
-
-    ExcludeAzurePowerShellCredential = true,
-    ExcludeEnvironmentCredential = true,
-    ExcludeAzureCliCredential = true,
-    ExcludeInteractiveBrowserCredential = false,
-    ExcludeManagedIdentityCredential = true,
-    ExcludeSharedTokenCacheCredential = true,
-    ExcludeVisualStudioCodeCredential = true,
-    ExcludeVisualStudioCredential = false,
-    //VisualStudioTenantId
-};
-
-
-//if (builder.Environment.IsProduction())
-//{
-builder.Configuration.AddAzureKeyVault(
-        new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/"),
-        new DefaultAzureCredential(/*options*/));
-//}
-
-//builder.Configuration.AddAzureAppConfiguration(options =>
-//{
-//    options.Connect(
-//        builder.Configuration["ConnectionStrings:AppConfig"])
-//            .ConfigureKeyVault(kv =>
-//            {
-//                kv.SetCredential(new DefaultAzureCredential());
-//            });
-//});
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -54,6 +21,11 @@ builder.Services.ConfigureInfrastructure();
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
+
+app.UseAzureAppConfiguration();
+
+
+app.Logger.LogInformation("Adding Routes");
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

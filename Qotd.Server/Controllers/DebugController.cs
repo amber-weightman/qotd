@@ -7,22 +7,22 @@ namespace Qotd.Server.Controllers;
 [Route("debug")]
 public class DebugController : ControllerBase
 {
-    private readonly string _secretsTest;
     private readonly string _org;
+    private readonly string _org2;
 
     public Metadata? Metadata { get; set; }
 
     public DebugController(IConfiguration configuration)
     {
-        _secretsTest = configuration["SecretsTest"];
         _org = configuration["OpenAI:organization"];
+        _org2 = configuration["ConnectionStrings:AppConfig"];
     }
 
     [HttpGet("test")]
     public async Task<string> Test(CancellationToken cancellationToken)
     {
         
-        return $"{_secretsTest} {_org}";
+        return $"{_org} {_org2}";
     }
 
     
