@@ -45,7 +45,7 @@ jobs:
         # The --version argument is optional. If it is omitted the latest version will be installed.
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner --version 5.0.0
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
 
       - name: Build
         shell: powershell
