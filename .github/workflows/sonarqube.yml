@@ -74,8 +74,8 @@ jobs:
           # not compatible with .NET 8 yet I think???, process terminates with below error
           # ERROR: Error during parsing of generic test execution report 'D:\a\qotd\qotd\test\TestResults\SonarTestResults.xml'. Look at the SonarQube documentation to know the expected XML format.
           # ERROR: Caused by: D:\a\qotd\qotd\test\TestResults\SonarTestResults.xml (The system cannot find the file specified)
-          # dotnet tool install --global dotnet-trx2sonar-updated
-          # dotnet-trx2sonar -d ./ -o ./test/TestResults/SonarTestResults.xml # You must install or update .NET to run this application. # SonartestResults.xml
+          dotnet tool install --global dotnet-trx2sonar-updated
+          dotnet-trx2sonar -d ./ -o ./test/TestResults/SonarTestResults.xml # You must install or update .NET to run this application. # SonartestResults.xml
 
           dotnet tool install -g dotnet-reportgenerator-globaltool
           reportgenerator "-reports:.\test\TestResults\*\coverage.cobertura.xml" "-targetdir:./test/TestCoverage" "-reporttypes:SonarQube"
