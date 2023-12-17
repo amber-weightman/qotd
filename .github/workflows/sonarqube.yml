@@ -80,4 +80,4 @@ jobs:
           dotnet tool install -g dotnet-reportgenerator-globaltool
           reportgenerator "-reports:.\test\TestResults\*\coverage.cobertura.xml" "-targetdir:./test/TestCoverage" "-reporttypes:SonarQube"
 
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
