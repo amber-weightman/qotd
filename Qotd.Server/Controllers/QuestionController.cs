@@ -35,7 +35,7 @@ public class QuestionController : ControllerBase, IMetadataController
     [HttpGet("setup")]
     public async Task Setup(CancellationToken cancellationToken)
     {
-        var response = await _questionService.Setup(Metadata, cancellationToken);
+        var response = await _questionService.Setup(Metadata!, cancellationToken);
         Metadata = response;
     }
 
@@ -52,7 +52,7 @@ public class QuestionController : ControllerBase, IMetadataController
     [HttpGet("generate-question")]
     public async Task<string> GenerateQuestion(CancellationToken cancellationToken)
     {
-        var response = await _questionService.GenerateQuestion(Metadata, cancellationToken);
+        var response = await _questionService.GenerateQuestion(Metadata!, cancellationToken);
 
         Metadata = response.Metadata;
 
@@ -73,7 +73,7 @@ public class QuestionController : ControllerBase, IMetadataController
     [HttpGet("get-question/{questionId}")]
     public async Task<string> GetQuestion([FromRoute]string questionId, CancellationToken cancellationToken)
     {
-        var response = await _questionService.GetQuestion(Metadata, questionId, cancellationToken);
+        var response = await _questionService.GetQuestion(Metadata!, questionId, cancellationToken);
 
         Metadata = response.Metadata;
 
@@ -89,6 +89,6 @@ public class QuestionController : ControllerBase, IMetadataController
     [HttpDelete]
     public async Task Delete(CancellationToken cancellationToken)
     {
-        await _questionService.Delete(Metadata, cancellationToken);
+        await _questionService.Delete(Metadata!, cancellationToken);
     }
 }

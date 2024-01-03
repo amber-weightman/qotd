@@ -24,7 +24,7 @@ public class QuestionServiceTests
         _service = new QuestionService(_mockAIClient);
     }
 
-    private void MockSetup(IAIClient mockAIClient)
+    private static void MockSetup(IAIClient mockAIClient)
     {
         var mockSetupResponse = new ResponseBase
         {
@@ -37,7 +37,7 @@ public class QuestionServiceTests
             .Returns(mockSetupResponse);
     }
 
-    private void MockRequest(IAIClient mockAIClient)
+    private static void MockRequest(IAIClient mockAIClient)
     {
         mockAIClient.RequestQuestion(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(x => new ResponseBase
@@ -48,7 +48,7 @@ public class QuestionServiceTests
             });
     }
 
-    private void MockFetch(IAIClient mockAIClient)
+    private static void MockFetch(IAIClient mockAIClient)
     {
         mockAIClient.FetchQuestion(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(x => new Response
@@ -60,7 +60,7 @@ public class QuestionServiceTests
             });
     }
 
-    private void MockDelete(IAIClient mockAIClient)
+    private static void MockDelete(IAIClient mockAIClient)
     {
         mockAIClient.Delete(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
     }

@@ -3,6 +3,7 @@ using OpenAI.Assistants;
 using OpenAI.Threads;
 using Qotd.Infrastructure.AI;
 using Qotd.Infrastructure.AI.Models;
+using Qotd.Infrastructure.Exceptions;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
@@ -35,7 +36,7 @@ internal record AIClient : IAIClient
         var assistant = await _client.AssistantsEndpoint.CreateAssistantAsync(request, cancellationToken);
         if (assistant is null)
         {
-            throw new ApplicationException("Failed to create Assistant");
+            throw new AIException("Failed to create Assistant");
         }
         return assistant;
     }
@@ -47,7 +48,7 @@ internal record AIClient : IAIClient
         var thread = await _client.ThreadsEndpoint.CreateThreadAsync(request, cancellationToken);
         if (thread is null)
         {
-            throw new ApplicationException("Failed to create Thread");
+            throw new AIException("Failed to create Thread");
         }
         return thread;
     }
@@ -58,7 +59,7 @@ internal record AIClient : IAIClient
         var run = await _client.ThreadsEndpoint.CreateRunAsync(threadId, request, cancellationToken);
         if (run is null)
         {
-            throw new ApplicationException("Failed to create Run");
+            throw new AIException("Failed to create Run");
         }
         return run;
     }
@@ -68,7 +69,7 @@ internal record AIClient : IAIClient
         var run = await _client.ThreadsEndpoint.RetrieveRunAsync(threadId, runId, cancellationToken);
         if (run is null)
         {
-            throw new ApplicationException("Failed to get Run");
+            throw new AIException("Failed to get Run");
         }
         return run;
     }
@@ -79,7 +80,7 @@ internal record AIClient : IAIClient
         var runs = await _client.ThreadsEndpoint.ListRunsAsync(threadId, request, cancellationToken);
         if (runs is null)
         {
-            throw new ApplicationException("Failed to get Run");
+            throw new AIException("Failed to get Run");
         }
         return runs.Items?.SingleOrDefault();
     }
@@ -89,7 +90,7 @@ internal record AIClient : IAIClient
         var messageList = await _client.ThreadsEndpoint.ListMessagesAsync(threadId, null, cancellationToken);
         if (messageList is null)
         {
-            throw new ApplicationException("Failed to get Messages");
+            throw new AIException("Failed to get Messages");
         }
         return messageList;
     }
@@ -115,7 +116,7 @@ internal record AIClient : IAIClient
     //    }
     //    if (newOptions.ThreadId is null || newOptions.RunId is null)
     //    {
-    //        throw new ApplicationException();
+    //        throw new AIException();
     //    }
     //    return newOptions;
     //}
@@ -225,19 +226,17 @@ internal record AIClient : IAIClient
         var assistantDeleted = await _client.AssistantsEndpoint.DeleteAssistantAsync(assistantId, cancellationToken);
         if (!threadDeleted && !assistantDeleted)
         {
-            throw new AggregateException(new[]
-                {
-                    new ApplicationException($"Failed to delete Assistant {assistantId}"),
-                    new ApplicationException($"Failed to delete Thread {threadId}")
-                });
+            throw new AggregateException(
+                new AIException($"Failed to delete Assistant {assistantId}"),
+                new AIException($"Failed to delete Thread {threadId}"));
         }
         else if (!assistantDeleted)
         {
-            throw new ApplicationException($"Failed to delete Assistant {assistantId}");
+            throw new AIException($"Failed to delete Assistant {assistantId}");
         }
         else if (!threadDeleted)
         {
-            throw new ApplicationException($"Failed to delete Thread {threadId}");
+            throw new AIException($"Failed to delete Thread {threadId}");
         }
     }
 
