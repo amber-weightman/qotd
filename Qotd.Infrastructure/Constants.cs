@@ -26,12 +26,12 @@ Questions should not be repeated.";
 
     internal record GptModel
     {
-        internal static string GPT4 = (string)Model.GPT4;
+        internal readonly static string GPT4 = (string)Model.GPT4;
 
-        internal static string GPT4_32K = (string)Model.GPT4_32K;
+        internal readonly static string GPT4_32K = (string)Model.GPT4_32K;
 
-        internal static string GPT3_5_Turbo = (string)Model.GPT3_5_Turbo;
+        internal readonly static string GPT3_5_Turbo = (string)Model.GPT3_5_Turbo;
 
-        internal static string GPT3_5_Turbo_16K = (string)Model.GPT3_5_Turbo_16K;
+        internal readonly static string GPT3_5_Turbo_16K = (string)Model.GPT3_5_Turbo_16K;
     }
 }
