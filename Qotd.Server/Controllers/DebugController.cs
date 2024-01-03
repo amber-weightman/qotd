@@ -3,6 +3,9 @@ using Qotd.Application.Models;
 
 namespace Qotd.Server.Controllers;
 
+/// <summary>
+/// Testing (TODO delete)
+/// </summary>
 [ApiController]
 [Route("debug")]
 public class DebugController : ControllerBase
@@ -18,6 +21,9 @@ public class DebugController : ControllerBase
         _org2 = configuration["ConnectionStrings:AppConfig"];
     }
 
+    /// <summary>
+    /// Testing (TODO delete)
+    /// </summary>
     [HttpGet("test")]
     public async Task<string> Test(CancellationToken cancellationToken)
     {

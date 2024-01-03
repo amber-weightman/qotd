@@ -6,6 +6,9 @@ using Qotd.Application.Models;
 
 namespace Qotd.Server.Controllers;
 
+/// <summary>
+/// A group of endpoints for generating questions
+/// </summary>
 [ApiController]
 [Route("question")]
 public class QuestionController : ControllerBase, IMetadataController
@@ -20,9 +23,12 @@ public class QuestionController : ControllerBase, IMetadataController
     }
 
     /// <summary>
-    /// Initialise your personal AI assistant
+    /// 1. Initialise your personal AI assistant
     /// </summary>
-    /// <param name="cancellationToken"></param>
+    /// <remarks>
+    /// AI assistant must be initialised first before questions can be retrieved
+    /// </remarks>
+    /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns></returns>
     [MetadataCookiesFilter]
     [ResponseCache(VaryByHeader = "User-Agent", Duration = 10)]
@@ -34,10 +40,13 @@ public class QuestionController : ControllerBase, IMetadataController
     }
 
     /// <summary>
-    /// Ask your pesonal AI assistant to think of a question for you
+    /// 2. Ask your pesonal AI assistant to think of a question for you
     /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns>Id which can be used to retrieve the question</returns>
+    /// <remarks>
+    /// Returns a text/plain `QuestionId` which can be used to retrieve the question
+    /// </remarks>
+    /// <param name="cancellationToken">Optional cancellation token</param>
+    /// <returns>A text/plain `QuestionId` which can be used to retrieve the question</returns>
     [MetadataCookiesFilter]
     [ResponseCache(VaryByHeader = "User-Agent", Duration = 2)]
     [HttpGet("generate-question")]
@@ -51,10 +60,13 @@ public class QuestionController : ControllerBase, IMetadataController
     }
 
     /// <summary>
-    /// Retrieve the question
+    /// 3. Retrieve the question
     /// </summary>
-    /// <param name="questionId">Id which can be used to retrieve the question</param>
-    /// <param name="cancellationToken"></param>
+    /// <remarks>
+    /// Returns a text/plain `Question`
+    /// </remarks>
+    /// <param name="questionId">`QuestionId` which can be used to retrieve the question</param>
+    /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns>Your very own personal Question of the Day</returns>
     [MetadataCookiesFilter]
     [ResponseCache(VaryByHeader = "User-Agent", Duration = 2)]

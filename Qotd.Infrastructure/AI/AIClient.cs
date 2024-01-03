@@ -20,7 +20,7 @@ internal interface IAIClient
 
 internal record AIClient : IAIClient
 {
-    private static readonly string Model = "gpt-3.5-turbo";
+    private static readonly string Model = Constants.GptModel.GPT3_5_Turbo;
 
     private readonly OpenAIClient _client;
 
