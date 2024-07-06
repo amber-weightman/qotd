@@ -5,6 +5,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import { AlertColor, Box, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
 import { useState } from "react";
 import MenuToast from './MenuToast';
+import AppDrawer from './AppDrawer';
+import About from './About';
 
 interface AppMenuProps {
   question: string | undefined,
@@ -15,6 +17,9 @@ function AppMenu(props: AppMenuProps) {
   const [openToast, setOpenToast] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | undefined>();
   const [toastSeverity, setToastSeverity] = useState<AlertColor | undefined>();
+
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [openAbout, setOpenAbout] = useState(false);
 
   const enum menuOptions {
     'COPY',
@@ -70,10 +75,17 @@ function AppMenu(props: AppMenuProps) {
 
   const handleOpenSettings = () => {
     handleOpenToast('Not implemented yet', 'warning');
+    setOpenDrawer(true);
   };
 
   const handleOpenAbout = () => {
-    handleOpenToast('Not implemented yet', 'warning');
+    setOpenDrawer(true);
+    setOpenAbout(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpenDrawer(false);
+    setOpenAbout(false);
   };
 
   return (
@@ -100,6 +112,9 @@ function AppMenu(props: AppMenuProps) {
         severity={toastSeverity}
         handleClose={handleCloseToast}
       />
+      <AppDrawer open={openDrawer} handleClose={handleDrawerClose}>
+        {openAbout && <About />}
+      </AppDrawer>
     </Box>
   );
 }
