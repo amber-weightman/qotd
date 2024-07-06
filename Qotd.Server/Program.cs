@@ -7,7 +7,7 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddUserSecrets<QuestionController>();
-builder.Configuration.ConfigureAzure();
+//builder.Configuration.ConfigureAzure();
 //builder.Services.AddAzureAppConfiguration();
 
 builder.Services.AddControllers();
