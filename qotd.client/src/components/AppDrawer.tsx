@@ -1,4 +1,5 @@
-import { SwipeableDrawer } from "@mui/material";
+import { Container, SwipeableDrawer } from "@mui/material";
+//import { grey } from '@mui/material/colors';
 
 interface AppDrawerProps {
   open: boolean,
@@ -23,7 +24,9 @@ function AppDrawer(props: AppDrawerProps) {
       disableDiscovery={true}
       disableSwipeToOpen={true}
     >
-      {props.children}
+      <Container sx={{ /*backgroundColor: grey[800]*/ /*'text-wrap': 'pretty' */}}>
+        {props.children}
+      </Container>
     </SwipeableDrawer>
   );
 }

@@ -1,40 +1,44 @@
-import { Container, Link, Typography } from "@mui/material";
+import { Container, Divider, Link, Typography } from "@mui/material";
 
-function About() {
+interface AboutProps {
+  dividerTextAlign: 'left' | 'center' | 'right'
+}
+
+About.defaultProps = {
+  dividerTextAlign: 'left'
+};
+
+function About(props: AboutProps) {
 
   return (
-    <Container maxWidth={false} >
-      <Typography variant="h5" component="h1">
-        About
-      </Typography>
-      <Typography variant="h6" component="h2">
-        About QOTD
-      </Typography>
+    <Container maxWidth="xl">
+      <Divider textAlign={props.dividerTextAlign}>
+        <Typography variant="h6" component="h2">About QOTD</Typography>
+      </Divider>
       <Typography paragraph={true} variant={"body1"}>
-        Just a little app for AI-generating questions of the day
+        Just a little app for AI-generating questions of the day. Features .NET 8, React, Material UI, Azure and OpenAI.
       </Typography>
-      <Typography paragraph={true}>
-        API:
+      <Typography paragraph={true} align="right">
         <Link href="https://questionoftheday.azurewebsites.net/swagger" target="_blank" rel="noopener">
-          https://questionoftheday.azurewebsites.net/swagger
+          API
         </Link>
       </Typography>
-      <Typography paragraph={true} variant={"body1"}>
-        This app uses cookies
-      </Typography>
-      <Typography variant="h6" component="h2">
-        About me
-      </Typography>
-      <Typography paragraph={true}>
-        GitHub:       
+      <Typography paragraph={true} align="right">
         <Link href="https://github.com/amber-weightman/qotd" target="_blank" rel="noopener">
-          https://github.com/amber-weightman/qotd
+          GitHub
         </Link>
       </Typography>
-      <Typography paragraph={true}>
-        LinkedIn:
+      
+      <Divider textAlign={props.dividerTextAlign}>
+        <Typography variant="h6" component="h2">About Amber</Typography>
+      </Divider>
+      <Typography paragraph={true} variant={"body1"}>
+        I used to be a developer like you, but then I took a career-change to the knee.
+      </Typography>
+
+      <Typography paragraph={true} align="right">
         <Link href="https://www.linkedin.com/in/amberweightman" target="_blank" rel="noopener">
-          https://www.linkedin.com/in/amberweightman
+          LinkedIn
         </Link>
       </Typography>
     </Container>

@@ -6,8 +6,8 @@ interface MenuToastProps {
   severity: AlertColor | undefined,
   handleClose: () => void,
   autoHideDuration: number | null | undefined,
-  vertical: 'top' | 'bottom';
-  horizontal: 'left' | 'center' | 'right';
+  vertical: 'top' | 'bottom',
+  horizontal: 'left' | 'center' | 'right'
 }
 
 MenuToast.defaultProps = {

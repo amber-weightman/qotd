@@ -1,15 +1,36 @@
-import { Backdrop, Box, CircularProgress } from '@mui/material';
+import { Backdrop, Box, CircularProgress, CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import './App.css';
 import AppMenu from './components/AppMenu';
 import QuestionDisplay from './components/QuestionDisplay';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+  //typography: {
+  //  fontFamily: [
+  //    '-apple-system',
+  //    'BlinkMacSystemFont',
+  //    '"Segoe UI"',
+  //    'Roboto',
+  //    '"Helvetica Neue"',
+  //    'Arial',
+  //    'sans-serif',
+  //    '"Apple Color Emoji"',
+  //    '"Segoe UI Emoji"',
+  //    '"Segoe UI Symbol"',
+  //  ].join(','),
+  //},
+});
 
 function App() {
   const [questionId, setQuestionId] = useState<string>();
   const [question, setQuestion] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [initialised, setInitialised] = useState(false);
-  
+
   useEffect(() => {
     //let ignore = false; // https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development
     init();
@@ -28,7 +49,7 @@ function App() {
     if (initialised) {
       return;
     }
-        
+
     await fetch('question/setup');
     setInitialised(true);
   }
@@ -60,7 +81,7 @@ function App() {
     setLoading(false);
   }
 
-  const lookupQuestion = async () => {
+  const handleLookupQuestion = async () => {
     if (!initialised) {
       return;
     }
@@ -85,18 +106,19 @@ function App() {
   }
 
   return (
-    <Box>
-        {question !== undefined && <QuestionDisplay question={question}></QuestionDisplay>}
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={loading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-        <AppMenu question={question} lookupQuestion={lookupQuestion} />
-      
-      
-    </Box>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+        <Box>
+          {question && <QuestionDisplay question={question}></QuestionDisplay>}
+          <Backdrop
+            open={loading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          <AppMenu question={question} lookupQuestion={handleLookupQuestion} />
+        </Box>
+    </ThemeProvider>
+
   );
 }
 
