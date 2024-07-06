@@ -1,7 +1,10 @@
 import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { Alert, Box, Snackbar, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
+import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
+import { AlertColor, Box, SpeedDial, SpeedDialAction, SpeedDialIcon } from "@mui/material";
 import { useState } from "react";
+import MenuToast from './MenuToast';
 
 interface AppMenuProps {
   question: string | undefined,
@@ -11,36 +14,72 @@ interface AppMenuProps {
 function AppMenu(props: AppMenuProps) {
   const [openToast, setOpenToast] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | undefined>();
+  const [toastSeverity, setToastSeverity] = useState<AlertColor | undefined>();
 
   const enum menuOptions {
     'COPY',
-    'REFRESH'
+    'REFRESH',
+    'SETTINGS',
+    'ABOUT'
   }
 
   const actions = [
     { icon: <FileCopyIcon />, name: 'Copy', operation: menuOptions.COPY },
-    { icon: <RefreshIcon />, name: 'Reload', operation: menuOptions.REFRESH }
+    { icon: <RefreshIcon />, name: 'Reload', operation: menuOptions.REFRESH },
+    { icon: <SettingsIcon />, name: 'Settings', operation: menuOptions.SETTINGS },
+    { icon: <InfoIcon />, name: 'About', operation: menuOptions.ABOUT }
   ];
 
   const handleClick = (operation: menuOptions) => {
-    if (operation === menuOptions.REFRESH) {
-      props.lookupQuestion();
-    } else if (operation === menuOptions.COPY && props.question) {
-      navigator.clipboard.writeText(props.question);
-      setToastMessage('Copied to clipboard');
-      setOpenToast(true);
+    switch (operation) {
+      case menuOptions.REFRESH:
+        props.lookupQuestion();
+        break;
+      case menuOptions.SETTINGS:
+        handleOpenSettings();
+        break;
+      case menuOptions.ABOUT:
+        handleOpenAbout();
+        break;
+      case menuOptions.COPY:
+        handleCopy();
+        break;
     }
   };
 
-  const handleClose = () => {
+  const handleOpenToast = (message: string, severity: AlertColor) => {
+    setToastMessage(message);
+    setToastSeverity(severity);
+    setOpenToast(true);
+  };
+
+  const handleCloseToast = () => {
     setToastMessage(undefined);
     setOpenToast(false);
+    setToastSeverity(undefined);
+  };
+
+  const handleCopy = () => {
+    if (props.question) {
+      navigator.clipboard.writeText(props.question);
+      handleOpenToast('Copied to clipboard', 'success');
+    } else {
+      handleOpenToast('Something went wrong', 'error');
+    }
+  };
+
+  const handleOpenSettings = () => {
+    handleOpenToast('Not implemented yet', 'warning');
+  };
+
+  const handleOpenAbout = () => {
+    handleOpenToast('Not implemented yet', 'warning');
   };
 
   return (
     <Box sx={{ height: 320, flexGrow: 1 }}>
       <SpeedDial
-        ariaLabel="SpeedDial basic example"
+        ariaLabel="Website menu"
         sx={{ position: 'absolute', bottom: 32, right: 32 }}
         icon={<SpeedDialIcon />}
       >
@@ -55,20 +94,12 @@ function AppMenu(props: AppMenuProps) {
           />
         ))}
       </SpeedDial>
-      <Snackbar
+      <MenuToast
         open={openToast}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
-          {toastMessage}
-        </Alert>
-      </Snackbar>
+        message={toastMessage}
+        severity={toastSeverity}
+        handleClose={handleCloseToast}
+      />
     </Box>
   );
 }
