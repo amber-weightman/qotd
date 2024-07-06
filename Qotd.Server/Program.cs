@@ -1,5 +1,5 @@
-using Qotd.Application;
 using Qotd.Api;
+using Qotd.Application;
 using Qotd.Infrastructure;
 using Qotd.Server.Controllers;
 using System.Reflection;
@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddUserSecrets<QuestionController>();
 builder.Configuration.ConfigureAzure();
-//builder.Services.AddAzureAppConfiguration();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -61,4 +60,4 @@ app.MapHealthChecks("/health")
     );
 //.RequireAuthorization();
 
-app.Run();
+await app.RunAsync();

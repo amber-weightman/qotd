@@ -19,7 +19,7 @@ function AppMenu(props: AppMenuProps) {
 
   const actions = [
     { icon: <FileCopyIcon />, name: 'Copy', operation: menuOptions.COPY },
-    { icon: <RefreshIcon />, name: 'Refresh', operation: menuOptions.REFRESH }
+    { icon: <RefreshIcon />, name: 'Reload', operation: menuOptions.REFRESH }
   ];
 
   const handleClick = (operation: menuOptions) => {

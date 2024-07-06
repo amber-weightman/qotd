@@ -1,7 +1,9 @@
 ﻿using OpenAI.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Qotd.Infrastructure;
 
+[ExcludeFromCodeCoverage]
 internal record Constants
 {
     internal record Common
