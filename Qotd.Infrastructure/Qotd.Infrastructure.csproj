@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
-    <PackageReference Include="OpenAI-DotNet" Version="8.1.1" />
+    <PackageReference Include="OpenAI-DotNet" Version="7.6.0" />
   </ItemGroup>
 
   <ItemGroup>

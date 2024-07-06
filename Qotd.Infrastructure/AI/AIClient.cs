@@ -56,7 +56,7 @@ internal record AIClient : IAIClient
     private async Task<RunResponse> CreateRun(string threadId, string assistantId, CancellationToken cancellationToken)
     {
         var request = new CreateRunRequest(assistantId, model: Model);
-        var run = await _client.ThreadsEndpoint.CreateRunAsync(threadId, request, cancellationToken);
+        var run = await _client.ThreadsEndpoint.CreateRunAsync(threadId, request, cancellationToken: cancellationToken);
         if (run is null)
         {
             throw new AIException("Failed to create Run");
