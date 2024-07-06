@@ -78,11 +78,11 @@ internal record AIClient : IAIClient
     {
         var request = new ListQuery { Limit = 1, Order = SortOrder.Descending };
         var runs = await _client.ThreadsEndpoint.ListRunsAsync(threadId, request, cancellationToken);
-        if (runs is null)
+        if (runs is null || runs.Items is null || runs.Items.Count != 1)
         {
             throw new AIException("Failed to get Run");
         }
-        return runs.Items?.SingleOrDefault();
+        return runs.Items.Single();
     }
 
     private async Task<ListResponse<MessageResponse>> GetMessages(string threadId, CancellationToken cancellationToken)

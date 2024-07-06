@@ -6,7 +6,12 @@ namespace Qotd.Api.Filters;
 
 public class MetadataCookiesFilter : ActionFilterAttribute
 {
-    private static CookieOptions CookieOptions = new CookieOptions { Expires = DateTime.Now.AddYears(1) };
+    private static CookieOptions CookieOptions = new CookieOptions 
+    { 
+        Expires = DateTime.Now.AddYears(1),
+        Secure = true,
+        HttpOnly = true
+    };
 
     private readonly bool _delete;
 

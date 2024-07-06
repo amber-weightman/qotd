@@ -13,11 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qotd.Infrastructure", "Qotd
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52C308B8-A3A1-4619-949D-CB22AD38F934}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Qotd.UnitTests", "test\Qotd.UnitTests\Qotd.UnitTests.csproj", "{F7FE82ED-EA63-476B-8440-A07778E3037B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Qotd.UnitTests", "test\Qotd.UnitTests\Qotd.UnitTests.csproj", "{F7FE82ED-EA63-476B-8440-A07778E3037B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4477B052-8B24-47E9-BCC6-BDB089B96336}"
 EndProject
