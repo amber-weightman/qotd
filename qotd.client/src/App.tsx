@@ -34,75 +34,48 @@ function App() {
   useEffect(() => {
     //let ignore = false; // https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development
     init();
-
   }, [initialised]);
 
   useEffect(() => {
-    init2();
+    handleGenerateQuestion();
   }, [initialised]);
 
   useEffect(() => {
-    lookupInitialQuestion();
+    handleLookupQuestion();
   }, [questionId]);
 
   const init = async () => {
     if (initialised) {
       return;
     }
-
     await fetch('question/setup');
     setInitialised(true);
   }
 
-  const init2 = async () => {
-    if (!initialised || questionId) {
+  const handleGenerateQuestion = async () => {
+    if (!initialised) {
       return;
     }
-
     const response = await fetch('question/generate-question');
     const r: string = await response.text();
     setQuestionId(r);
   }
 
-  const lookupInitialQuestion = async () => {
-    if (!initialised) {
+  const handleLookupQuestion = async () => {
+    if (!initialised || !questionId) {
       return;
     }
-
-    if (!questionId) {
-      return;
-    }
-
     const response = await fetch('question/get-question/' + questionId);
-
     const data: string = await response.text();
     setQuestion(data);
     console.log(data);
     setLoading(false);
   }
 
-  const handleLookupQuestion = async () => {
-    if (!initialised) {
-      return;
-    }
-
-    const response1 = await fetch('question/generate-question');
-    const r: string = await response1.text();
-    setQuestionId(r);
-
-    if (!questionId) {
-      return;
-    }
-
+  const handleLookupNewQuestion = async () => {
     setLoading(true);
     setQuestion(undefined);
-
-
-    const response = await fetch('question/get-question/' + questionId);
-    const data: string = await response.text();
-    setQuestion(data);
-    console.log(data);
-    setLoading(false);
+    handleGenerateQuestion();
   }
 
   return (
@@ -115,10 +88,9 @@ function App() {
           >
             <CircularProgress color="inherit" />
           </Backdrop>
-          <AppMenu question={question} lookupQuestion={handleLookupQuestion} />
+          <AppMenu question={question} lookupQuestion={handleLookupNewQuestion} />
         </Box>
     </ThemeProvider>
-
   );
 }
 
