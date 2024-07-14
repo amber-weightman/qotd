@@ -50,6 +50,7 @@ function App() {
     }
     await fetch('question/setup');
     setInitialised(true);
+    console.log('initialised');
   }
 
   const handleGenerateQuestion = async () => {

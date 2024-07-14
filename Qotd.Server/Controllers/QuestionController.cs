@@ -69,7 +69,7 @@ public class QuestionController : ControllerBase, IMetadataController
     /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns>Your very own personal Question of the Day</returns>
     [MetadataCookiesFilter]
-    [ResponseCache(VaryByHeader = "User-Agent", Duration = 2)]
+    [ResponseCache(VaryByHeader = "User-Agent", Duration = 286400)]
     [HttpGet("get-question/{questionId}")]
     public async Task<string> GetQuestion([FromRoute]string questionId, CancellationToken cancellationToken)
     {
