@@ -4,6 +4,7 @@ using OpenAI.Threads;
 using Qotd.Infrastructure.AI;
 using Qotd.Infrastructure.AI.Models;
 using Qotd.Infrastructure.Exceptions;
+using Qotd.Infrastructure.Models;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
@@ -13,13 +14,13 @@ namespace Qotd.Infrastructure.ChatGpt;
 internal interface IAIClient
 {
     Task<ResponseBase> SetupThread(CancellationToken cancellationToken);
-    Task<ResponseBase> SetupThread(string? assistantId, string? threadId, CancellationToken cancellationToken);
+    Task<ResponseBase> SetupThread(string? assistantId, string? threadId, Geolocation? geolocation, CancellationToken cancellationToken);
     Task<ResponseBase> RequestQuestion(string assistantId, string threadId, CancellationToken cancellationToken);
     Task<Response> FetchQuestion(string threadId, string runId, CancellationToken cancellationToken);
     Task Delete(string assistantId, string threadId, CancellationToken cancellationToken);
 }
 
-internal record AIClient : IAIClient
+internal sealed record AIClient : IAIClient
 {
     private static readonly string Model = Constants.GptModel.GPT3_5_Turbo;
 
@@ -126,9 +127,10 @@ internal record AIClient : IAIClient
     /// <summary>
     /// Create a new assistant (if not already existing) and a new thread (if not already existing)
     /// </summary>
-    public async Task<ResponseBase> SetupThread(string? assistantId, string? threadId, CancellationToken cancellationToken)
+    public async Task<ResponseBase> SetupThread(string? assistantId, string? threadId, Geolocation? geolocation, CancellationToken cancellationToken)
     {
-        string assistantId2 = assistantId ?? (await CreateAssistant(Constants.Common.AssistantName, InstructionsBuilder.GetInstructions(), cancellationToken)).Id;
+        var assistantName = geolocation == null ? Constants.Common.AssistantName : $"{Constants.Common.AssistantName} {geolocation.IP}";
+        string assistantId2 = assistantId ?? (await CreateAssistant(assistantName, InstructionsBuilder.GetInstructions(), cancellationToken)).Id;
         string threadId2 = threadId ?? (await CreateThread(cancellationToken)).Id;
 
         return new ResponseBase
@@ -168,6 +170,8 @@ internal record AIClient : IAIClient
         catch (HttpRequestException e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             // Assistant and/or thread may no longer exist on the server, so setup a fresh thread and run that instead
+
+            // TODO geolocate?
 
             var newNewOptions = await SetupThread(cancellationToken);
             threadId = newNewOptions.ThreadId; // TODO shouldn't be re-assigning incoming args

@@ -9,7 +9,7 @@ internal record ResponseBase
     public string? RunId { get; init; }
 }
 
-internal record Response : ResponseBase
+internal sealed record Response : ResponseBase
 {
     public string? Question { get; init; }
 }

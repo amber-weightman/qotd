@@ -4,13 +4,13 @@ using System.Diagnostics.CodeAnalysis;
 namespace Qotd.Infrastructure;
 
 [ExcludeFromCodeCoverage]
-internal record Constants
+internal sealed record Constants
 {
-    internal record Common
+    internal sealed record Common
     {
         internal const string DefaultQuestion = "What's the answer to life, the universe and everything?";
 
-        internal const string AssistantName = "Manager";
+        internal const string AssistantName = "QOTD Assistant";
 
         internal const string AssistantInstructions = @"You are a manager of a remote team. 
 
@@ -26,7 +26,7 @@ Questions should not be repeated.";
         internal const string AssistantPrompt = "Give me a question please";
     }
 
-    internal record GptModel
+    internal sealed record GptModel
     {
         internal readonly static string GPT4 = (string)Model.GPT4;
 

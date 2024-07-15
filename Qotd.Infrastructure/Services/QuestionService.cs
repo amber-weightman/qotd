@@ -1,24 +1,38 @@
 ﻿using Qotd.Application.Interfaces;
 using Qotd.Application.Models;
 using Qotd.Infrastructure.ChatGpt;
+using Qotd.Infrastructure.Clients;
+using Qotd.Infrastructure.Models;
 
 namespace Qotd.Infrastructure.Services;
 
-internal record QuestionService : IQuestionService
+internal sealed record QuestionService : IQuestionService
 {
     private readonly IAIClient _client;
+    private readonly IIpApiClient _ipClient;
 
-    public QuestionService(IAIClient client)
+    public QuestionService(IAIClient client, IIpApiClient ipClient)
     {
         _client = client;
+        _ipClient = ipClient;
     }
 
-    public async Task<Metadata> Setup(Metadata? metadata, CancellationToken cancellationToken)
+    public async Task<Metadata> Setup(Metadata? metadata, string? ipAddress, CancellationToken cancellationToken)
     {
         var assistantId = metadata is not null && metadata.Values.TryGetValue("AssistantId", out var a) ? a : null;
         var threadId = metadata is not null && metadata.Values.TryGetValue("ThreadId", out var t) ? t : null;
 
-        var response = await _client.SetupThread(assistantId, threadId, cancellationToken);
+        Geolocation? geolocation = null;
+        if(!string.IsNullOrEmpty(ipAddress))
+        {
+            var ipApiResponse = await _ipClient.Geolocate(ipAddress, cancellationToken);
+            if(!string.IsNullOrEmpty(ipApiResponse?.Country))
+            {
+                geolocation = new Geolocation { Country = ipApiResponse.Country, IP = ipAddress };
+            }
+        }
+
+        var response = await _client.SetupThread(assistantId, threadId, geolocation, cancellationToken);
 
         return new Metadata
         {

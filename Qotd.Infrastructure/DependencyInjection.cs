@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenAI;
 using Qotd.Application.Interfaces;
 using Qotd.Infrastructure.ChatGpt;
+using Qotd.Infrastructure.Clients;
 using Qotd.Infrastructure.Services;
 using System.Diagnostics.CodeAnalysis;
 
@@ -33,6 +34,8 @@ public static class DependencyInjection
 
             return new OpenAIClient(auth, null, httpClient); 
         });
+
+        services.AddHttpClient<IIpApiClient, IpApiClient>();
 
         return services;
     }

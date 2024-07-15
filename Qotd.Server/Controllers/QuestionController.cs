@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Qotd.Api.Controllers;
+using Qotd.Api.Extensions;
 using Qotd.Api.Filters;
 using Qotd.Application.Interfaces;
 using Qotd.Application.Models;
@@ -35,7 +36,8 @@ public class QuestionController : ControllerBase, IMetadataController
     [HttpGet("setup")]
     public async Task Setup(CancellationToken cancellationToken)
     {
-        var response = await _questionService.Setup(Metadata!, cancellationToken);
+        var ip = HttpContext.GetIp();
+        var response = await _questionService.Setup(Metadata!, ip, cancellationToken);
         Metadata = response;
     }
 
