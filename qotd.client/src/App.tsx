@@ -31,6 +31,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [initialised, setInitialised] = useState(false);
 
+  const apiKey: string | undefined = import.meta.env.VITE_API_KEY;  
+
   useEffect(() => {
     //let ignore = false; // https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development
     init();
@@ -48,7 +50,10 @@ function App() {
     if (initialised) {
       return;
     }
-    await fetch('question/setup');
+
+    const request: Request = new Request('question/setup', apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
+    await fetch(request);
+
     setInitialised(true);
     console.log('initialised');
   }
@@ -57,8 +62,11 @@ function App() {
     if (!initialised) {
       return;
     }
-    const response = await fetch('question/generate-question');
+
+    const request: Request = new Request('question/generate-question', apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
+    const response = await fetch(request);
     const r: string = await response.text();
+
     setQuestionId(r);
   }
 
@@ -66,8 +74,11 @@ function App() {
     if (!initialised || !questionId) {
       return;
     }
-    const response = await fetch('question/get-question/' + questionId);
+
+    const request: Request = new Request('question/get-question/' + questionId, apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
+    const response = await fetch(request);
     const data: string = await response.text();
+
     setQuestion(data);
     console.log(data);
     setLoading(false);
