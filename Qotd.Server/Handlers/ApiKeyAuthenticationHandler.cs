@@ -21,14 +21,14 @@ internal sealed class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKey
     {
         if (Request.Headers.TryGetValue(ApiKeyAuthenticationOptions.HeaderName, out var apiKey) && apiKey.Count == 1)
         {
-            return await HandleClientKeyAuth(apiKey);
+            return HandleClientKeyAuth(apiKey);
         }
 
         Logger.LogWarning("An unauthenticated API request was received");
         return AuthenticateResult.Fail("Invalid parameters");
     }
 
-    private async Task<AuthenticateResult> HandleClientKeyAuth(string apiKey)
+    private AuthenticateResult HandleClientKeyAuth(string apiKey)
     {
         var client = _clientService.AuthenticateClient(apiKey);
 

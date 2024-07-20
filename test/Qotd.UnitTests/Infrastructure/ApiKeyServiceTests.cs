@@ -39,6 +39,6 @@ public class ApiKeyServiceTests
         var sut = _service.Generate();
 
         // Assert
-        Uri.IsWellFormedUriString(sut, UriKind.Relative);
+        Assert.True(Uri.IsWellFormedUriString(sut, UriKind.Relative));
     }
 }

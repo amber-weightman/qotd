@@ -10,7 +10,7 @@ internal interface IIpApiClient
 
 internal sealed record IpApiClient(HttpClient httpClient) : IIpApiClient
 {
-    private const string BASE_URL = "http://ip-api.com";
+    private const string BASE_URL = "https://ip-api.com";
     private readonly HttpClient _httpClient = httpClient;
 
     public async Task<IpApiLiteResponse?> Geolocate(string? ipAddress, CancellationToken cancellationToken)

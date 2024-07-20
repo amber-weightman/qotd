@@ -218,7 +218,7 @@ internal sealed record AiClient : IAiClient
 
         return new Response
         {
-            Question = messages.Items.FirstOrDefault()?.Content?.FirstOrDefault()?.Text?.Value,
+            Question = messages.Items[0]?.Content?[0]?.Text?.Value,
             ThreadId = threadId,
             RunId = runId
         };

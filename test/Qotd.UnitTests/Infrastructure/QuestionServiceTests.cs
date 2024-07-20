@@ -73,7 +73,7 @@ public class QuestionServiceTests
     #region Setup
 
     [Fact]
-    public async void GivenNullMetadata_WhenSetupCalled_ThenValidMetadataReturned()
+    public async Task GivenNullMetadata_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockSetup(_mockAiClient);
@@ -88,7 +88,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenNullAssistantId_WhenSetupCalled_ThenValidMetadataReturned()
+    public async Task GivenNullAssistantId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockSetup(_mockAiClient);
@@ -111,7 +111,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyAssistantId_WhenSetupCalled_ThenValidMetadataReturned()
+    public async Task GivenEmptyAssistantId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockSetup(_mockAiClient);
@@ -135,7 +135,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenNullThreadId_WhenSetupCalled_ThenValidMetadataReturned()
+    public async Task GivenNullThreadId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockSetup(_mockAiClient);
@@ -158,7 +158,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyThreadId_WhenSetupCalled_ThenValidMetadataReturned()
+    public async Task GivenEmptyThreadId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockSetup(_mockAiClient);
@@ -181,7 +181,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenFullMetadata_WhenSetupCalled_ThenValidMetadataReturned()
+    public async Task GivenFullMetadata_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockSetup(_mockAiClient);
@@ -208,7 +208,7 @@ public class QuestionServiceTests
     #region Generate
 
     [Fact]
-    public async void GivenNullMetadata_WhenGenerateQuestionCalled_ThenExceptionThrown()
+    public async Task GivenNullMetadata_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockRequest(_mockAiClient);
@@ -219,7 +219,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenNullAssistantId_WhenGenerateQuestionCalled_ThenExceptionThrown()
+    public async Task GivenNullAssistantId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockRequest(_mockAiClient);
@@ -238,7 +238,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyAssistantId_WhenGenerateQuestionCalled_ThenExceptionThrown()
+    public async Task GivenEmptyAssistantId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockRequest(_mockAiClient);
@@ -257,7 +257,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenNullThreadId_WhenGenerateQuestionCalled_ThenExceptionThrown()
+    public async Task GivenNullThreadId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockRequest(_mockAiClient);
@@ -276,7 +276,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyThreadId_WhenGenerateQuestionCalled_ThenExceptionThrown()
+    public async Task GivenEmptyThreadId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockRequest(_mockAiClient);
@@ -295,7 +295,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenFullMetadata_WhenGenerateQuestionCalled_ThenValidMetadataReturned()
+    public async Task GivenFullMetadata_WhenGenerateQuestionCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockRequest(_mockAiClient);
@@ -323,7 +323,7 @@ public class QuestionServiceTests
     #region Get
 
     [Fact]
-    public async void GivenNullMetadata_WhenGetQuestionCalled_ThenExceptionThrown()
+    public async Task GivenNullMetadata_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockFetch(_mockAiClient);
@@ -334,7 +334,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenNullThreadId_WhenGetQuestionCalled_ThenExceptionThrown()
+    public async Task GivenNullThreadId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockFetch(_mockAiClient);
@@ -352,7 +352,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyThreadId_WhenGetQuestionCalled_ThenExceptionThrown()
+    public async Task GivenEmptyThreadId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockFetch(_mockAiClient);
@@ -370,7 +370,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenNullRunId_WhenGetQuestionCalled_ThenExceptionThrown()
+    public async Task GivenNullRunId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockFetch(_mockAiClient);
@@ -388,7 +388,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyRunId_WhenGetQuestionCalled_ThenExceptionThrown()
+    public async Task GivenEmptyRunId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
         MockFetch(_mockAiClient);
@@ -406,7 +406,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenFullMetadata_WhenGetQuestionCalled_ThenValidMetadataReturned()
+    public async Task GivenFullMetadata_WhenGetQuestionCalled_ThenValidMetadataReturned()
     {
         // Arrange
         MockFetch(_mockAiClient);
@@ -432,7 +432,7 @@ public class QuestionServiceTests
     #region Delete
 
     [Fact]
-    public async void GivenNullMetadata_WhenDeleteCalled_ThenExceptionThrown()
+    public async Task GivenNullMetadata_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
         MockDelete(_mockAiClient);
@@ -462,7 +462,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyAssistantId_WhenDeleteCalled_ThenExceptionThrown()
+    public async Task GivenEmptyAssistantId_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
         MockDelete(_mockAiClient);
@@ -481,7 +481,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenNullThreadId_WhenDeleteCalled_ThenExceptionThrown()
+    public async Task GivenNullThreadId_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
         MockDelete(_mockAiClient);
@@ -500,7 +500,7 @@ public class QuestionServiceTests
     }
 
     [Fact]
-    public async void GivenEmptyThreadId_WhenDeleteCalled_ThenExceptionThrown()
+    public async Task GivenEmptyThreadId_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
         MockDelete(_mockAiClient);

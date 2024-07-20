@@ -5,10 +5,13 @@ using Qotd.Api.Options;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace Qotd.Api;
+namespace Qotd.Api.Startup;
 
+/// <summary>
+/// Dependency Injection extensions for Qotd.Api
+/// </summary>
 [ExcludeFromCodeCoverage]
-public static class DependencyInjection
+public static class DependencyInjectionExtensions
 {
     public static IServiceCollection ConfigureApi(this IServiceCollection services)
     {
@@ -21,24 +24,10 @@ public static class DependencyInjection
         return services;
     }
 
-    public static ConfigurationManager ConfigureAzure(this ConfigurationManager configuration)
-    {
-        configuration.AddAzureAppConfiguration(options =>
-        {
-            options.Connect(
-                    configuration["ConnectionStrings:AppConfig"])
-                    .ConfigureKeyVault(kv =>
-                    {
-                        kv.SetCredential(new DefaultAzureCredential());
-                    });
-        });
-        // If this causes issues running locally, make sure there are no "not logged in" warnings
-
-        return configuration;
-    }
-
     public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
     {
+        services.AddEndpointsApiExplorer();
+
         services.AddSwaggerGen(setup =>
         {
             setup.AddSecurityDefinition(ApiKeyAuthenticationOptions.DefaultScheme, new OpenApiSecurityScheme
@@ -68,5 +57,21 @@ public static class DependencyInjection
             setup.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
         });
         return services;
+    }
+
+    public static ConfigurationManager ConfigureAzure(this ConfigurationManager configuration)
+    {
+        configuration.AddAzureAppConfiguration(options =>
+        {
+            options.Connect(
+                    configuration["ConnectionStrings:AppConfig"])
+                    .ConfigureKeyVault(kv =>
+                    {
+                        kv.SetCredential(new DefaultAzureCredential());
+                    });
+        });
+        // If this causes issues running locally, make sure there are no "not logged in" warnings
+
+        return configuration;
     }
 }

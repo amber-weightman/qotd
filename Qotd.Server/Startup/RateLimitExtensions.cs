@@ -1,14 +1,23 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.HttpOverrides;
 using Qotd.Api.Options;
 using Qotd.Application.Enums;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.RateLimiting;
 
 namespace Qotd.Api.Startup;
 
+[ExcludeFromCodeCoverage]
 public static class RateLimitWebApplicationBuilderExtensions
 {
     public static WebApplicationBuilder AddRateLimit(this WebApplicationBuilder builder)
     {
+        // forward headers configuration for reverse proxy
+        builder.Services.Configure<ForwardedHeadersOptions>(options => {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            options.KnownNetworks.Clear();
+            options.KnownProxies.Clear();
+        });
+
         builder.Services.AddRateLimiter(limiterOptions =>
         {
             limiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
