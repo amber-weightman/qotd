@@ -34,8 +34,8 @@ function App() {
   const [rateLimited, setRateLimited] = useState(false);
 
   const apiKey: string | undefined = import.meta.env.VITE_API_KEY;  
-  console.log("API Key " + apiKey);
-  console.log(import.meta.env.VITE_SOME_KEY) 
+  //console.log("API Key " + apiKey);
+  //console.log(import.meta.env.VITE_SOME_KEY) 
 
   useEffect(() => {
     //let ignore = false; // https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development
@@ -50,6 +50,17 @@ function App() {
     handleLookupQuestion();
   }, [questionId]);
 
+  const handleErrorResponse = (response: Response) => {
+    if (!response.ok) {
+      if (response.status === 429) {
+        setRateLimited(true);
+      }
+      setLoading(false);
+      return true;
+    }
+    return false;
+  }
+
   const init = async () => {
     if (initialised) {
       return;
@@ -58,13 +69,10 @@ function App() {
     const request: Request = new Request('question/setup', apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
     const response = await fetch(request);
 
-    if (!response.ok) {
-      console.log('Something went wrong');
-      if (response.status === 429) {
-        setRateLimited(true);
-      }
+    if (handleErrorResponse(response)) {
       return;
     }
+
     setInitialised(true);
   }
 
@@ -73,35 +81,30 @@ function App() {
       return;
     }
 
+    const oldQuestion = question;
+    setQuestion(undefined);
+
     const request: Request = new Request('question/generate-question', apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
     const response = await fetch(request);
 
-    if (!response.ok) {
-      console.log('Something went wrong');
-      if (response.status === 429) {
-        setRateLimited(true);
-      }
+    if (handleErrorResponse(response)) {
+      setQuestion(oldQuestion);
       return;
     }
    
-    const r: string = await response.text();
-
-    setQuestionId(r);
+    const newQuestion: string = await response.text();
+    setQuestionId(newQuestion);
   }
 
   const handleLookupQuestion = async () => {
     if (!initialised || !questionId) {
       return;
     }
-
+    
     const request: Request = new Request('question/get-question/' + questionId, apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
     const response = await fetch(request);
 
-    if (!response.ok) {
-      console.log('Something went wrong');
-      if (response.status === 429) {
-        setRateLimited(true);
-      }
+    if (handleErrorResponse(response)) {
       return;
     }
 
@@ -114,7 +117,6 @@ function App() {
 
   const handleLookupNewQuestion = async () => {
     setLoading(true);
-    setQuestion(undefined);
     handleGenerateQuestion();
   }
 

@@ -35,10 +35,10 @@ public static class RateLimitWebApplicationBuilderExtensions
                     return RateLimitPartition.GetTokenBucketLimiter(user, _ =>
                         new TokenBucketRateLimiterOptions
                         {
-                            TokenLimit = 15,
+                            TokenLimit = 32,
                             QueueLimit = 0,
                             ReplenishmentPeriod = TimeSpan.FromHours(12),
-                            TokensPerPeriod = 15,
+                            TokensPerPeriod = 32,
                             AutoReplenishment = true
                         });
                 }
@@ -46,10 +46,10 @@ public static class RateLimitWebApplicationBuilderExtensions
                 return RateLimitPartition.GetTokenBucketLimiter(user, _ =>
                     new TokenBucketRateLimiterOptions
                     {
-                        TokenLimit = 5,
+                        TokenLimit = 16,
                         QueueLimit = 0,
                         ReplenishmentPeriod = TimeSpan.FromHours(12),
-                        TokensPerPeriod = 5,
+                        TokensPerPeriod = 16,
                         AutoReplenishment = true
                     });
 

@@ -6,10 +6,6 @@ interface RateLimitDialogProps {
   open: boolean
 }
 
-RateLimitDialog.defaultProps = {
-  
-};
-
 function RateLimitDialog(props: RateLimitDialogProps) {
   const [dismissed, setDismissed] = React.useState(false);
 
@@ -43,7 +39,7 @@ function RateLimitDialog(props: RateLimitDialogProps) {
           Wow, you must really like this app. That's great!
         </Typography>
         <Typography gutterBottom>
-          You have reached the maximum number of daily questions, but come back in 12 hours if you would like more.
+          You've reached the maximum number of daily questions, but come back in 12 hours if you'd like more.
         </Typography>
         <Typography gutterBottom>
           [To request an increase to this limit, contact Amber.]
@@ -51,7 +47,7 @@ function RateLimitDialog(props: RateLimitDialogProps) {
       </DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleClose}>
-          Save changes
+          OK
         </Button>
       </DialogActions>
     </Dialog>
