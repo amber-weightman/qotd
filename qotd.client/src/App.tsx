@@ -34,6 +34,8 @@ function App() {
   const [rateLimited, setRateLimited] = useState(false);
 
   const apiKey: string | undefined = import.meta.env.VITE_API_KEY;  
+  console.log("API Key " + apiKey);
+  console.log(import.meta.env.VITE_SOME_KEY) 
 
   useEffect(() => {
     //let ignore = false; // https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development
@@ -64,7 +66,6 @@ function App() {
       return;
     }
     setInitialised(true);
-    console.log('initialised');
   }
 
   const handleGenerateQuestion = async () => {

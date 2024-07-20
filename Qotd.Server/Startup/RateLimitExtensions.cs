@@ -1,4 +1,5 @@
-﻿using Qotd.Api.Options;
+﻿using Microsoft.Extensions.Options;
+using Qotd.Api.Options;
 using Qotd.Application.Enums;
 using System.Threading.RateLimiting;
 
@@ -26,7 +27,7 @@ public static class RateLimitWebApplicationBuilderExtensions
                         new TokenBucketRateLimiterOptions
                         {
                             TokenLimit = 15,
-                            QueueLimit = 5,
+                            QueueLimit = 0,
                             ReplenishmentPeriod = TimeSpan.FromHours(12),
                             TokensPerPeriod = 15,
                             AutoReplenishment = true
@@ -37,13 +38,18 @@ public static class RateLimitWebApplicationBuilderExtensions
                     new TokenBucketRateLimiterOptions
                     {
                         TokenLimit = 5,
-                        QueueLimit = 5,
+                        QueueLimit = 0,
                         ReplenishmentPeriod = TimeSpan.FromHours(12),
                         TokensPerPeriod = 5,
                         AutoReplenishment = true
                     });
 
             });
+            //limiterOptions.OnRejected = async (context, token) =>
+            //{
+            //    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            //    await context.HttpContext.Response.WriteAsync("Too many requests. Please try later again... ", cancellationToken: token);
+            //};
         });
 
         return builder;

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using Qotd.Api.Options;
 using Qotd.Application.Interfaces;
+using Qotd.Application.Models;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 
@@ -33,20 +34,23 @@ internal sealed class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKey
 
         if (!client.IsAuthenticated)
         {
-            Logger.LogWarning($"An API request was received with an invalid API key: {apiKey}");
+            Logger.LogWarning("An API request was received with an invalid API key {ApiKey}", apiKey);
             return AuthenticateResult.Fail("Invalid parameters");
         }
 
         Logger.BeginScope("{ClientName}", client.ClientName);
         Logger.LogInformation("Client authenticated");
 
+        var ticket = BuildAuthenticationTicket(client);
+        return AuthenticateResult.Success(ticket);
+    }
+
+    private static AuthenticationTicket BuildAuthenticationTicket(AuthenticationResponse client)
+    {
         var claims = new[] { new Claim(ClaimTypes.Name, client.ClientName) };
         var identity = new ClaimsIdentity(claims, ApiKeyAuthenticationOptions.DefaultScheme);
         var identities = new List<ClaimsIdentity> { identity };
         var principal = new ClaimsPrincipal(identities);
-        var ticket = new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.DefaultScheme);
-
-        return AuthenticateResult.Success(ticket);
-
+        return new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.DefaultScheme);
     }
 }
