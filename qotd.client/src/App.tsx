@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import AppMenu from './components/AppMenu';
 import QuestionDisplay from './components/QuestionDisplay';
+import RateLimitDialog from './components/RateLimitDialog';
 
 const darkTheme = createTheme({
   palette: {
@@ -30,6 +31,7 @@ function App() {
   const [question, setQuestion] = useState<string>();
   const [loading, setLoading] = useState(true);
   const [initialised, setInitialised] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const apiKey: string | undefined = import.meta.env.VITE_API_KEY;  
 
@@ -52,8 +54,15 @@ function App() {
     }
 
     const request: Request = new Request('question/setup', apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
-    await fetch(request);
+    const response = await fetch(request);
 
+    if (!response.ok) {
+      console.log('Something went wrong');
+      if (response.status === 429) {
+        setRateLimited(true);
+      }
+      return;
+    }
     setInitialised(true);
     console.log('initialised');
   }
@@ -65,6 +74,15 @@ function App() {
 
     const request: Request = new Request('question/generate-question', apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
     const response = await fetch(request);
+
+    if (!response.ok) {
+      console.log('Something went wrong');
+      if (response.status === 429) {
+        setRateLimited(true);
+      }
+      return;
+    }
+   
     const r: string = await response.text();
 
     setQuestionId(r);
@@ -77,6 +95,15 @@ function App() {
 
     const request: Request = new Request('question/get-question/' + questionId, apiKey == undefined ? undefined : { headers: [['x-api-key', apiKey]] });
     const response = await fetch(request);
+
+    if (!response.ok) {
+      console.log('Something went wrong');
+      if (response.status === 429) {
+        setRateLimited(true);
+      }
+      return;
+    }
+
     const data: string = await response.text();
 
     setQuestion(data);
@@ -93,6 +120,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
+      <RateLimitDialog open={rateLimited} />
         <Box>
           {question && <QuestionDisplay question={question}></QuestionDisplay>}
           <Backdrop

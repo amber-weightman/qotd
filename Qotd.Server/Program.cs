@@ -1,24 +1,33 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Qotd.Api;
+using Qotd.Api.Options;
+using Qotd.Api.Startup;
 using Qotd.Application;
 using Qotd.Infrastructure;
 using Qotd.Server.Controllers;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// forward headers configuration for reverse proxy
+builder.Services.Configure<ForwardedHeadersOptions>(options => {
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
+builder.AddRateLimit();
+
 builder.Configuration.AddUserSecrets<QuestionController>();
 builder.Configuration.ConfigureAzure();
+
+builder.Services.ConfigureApi();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(c =>
-{
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
-});
+builder.Services.ConfigureSwagger();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -44,7 +53,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseRateLimit();
+
+app.MapControllers().RequireRateLimiting(RateLimitOptions.DefaultPolicyName);
 
 app.MapFallbackToFile("/index.html");
 
@@ -56,7 +67,8 @@ app.MapHealthChecks("/health")
         "*:5173",
         "questionoftheday.azurewebsites.net:*", 
         "www.questionoftheday.azurewebsites.net:*",
-        "builtbyamber.com:*"
+        "builtbyamber.com:*",
+        "www.builtbyamber.com:*"
     );
 //.RequireAuthorization();
 

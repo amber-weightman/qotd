@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Qotd.Api.Controllers;
 using Qotd.Api.Extensions;
@@ -11,6 +12,7 @@ namespace Qotd.Server.Controllers;
 /// A group of endpoints for generating questions
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("question")]
 public class QuestionController : ControllerBase, IMetadataController
 {
@@ -50,7 +52,6 @@ public class QuestionController : ControllerBase, IMetadataController
     /// <param name="cancellationToken">Optional cancellation token</param>
     /// <returns>A text/plain `QuestionId` which can be used to retrieve the question</returns>
     [MetadataCookiesFilter]
-    [ResponseCache(VaryByHeader = "User-Agent", Duration = 2)]
     [HttpGet("generate-question")]
     public async Task<string> GenerateQuestion(CancellationToken cancellationToken)
     {
