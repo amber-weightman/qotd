@@ -12,7 +12,7 @@ namespace Qotd.Server.Controllers;
 /// A group of endpoints for generating questions
 /// </summary>
 [ApiController]
-[Authorize]
+//[Authorize]
 [Route("question")]
 public class QuestionController : ControllerBase, IMetadataController
 {
