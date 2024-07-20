@@ -24,8 +24,7 @@ jobs:
 
       - name: Build with dotnet
         env:
-            OpenAI:apiKey: ${{ secrets.OPENAI_APIKEY }}
-            OpenAI:organization: ${{ secrets.OPENAI_ORGANIZATION }}
+            VITE_API_KEY: ${{ secrets.CLIENT_API_KEY }}
         run: dotnet build --configuration Release
 
       - name: dotnet publish
