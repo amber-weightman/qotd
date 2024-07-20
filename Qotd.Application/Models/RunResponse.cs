@@ -1,5 +1,8 @@
-﻿namespace Qotd.Application.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Qotd.Application.Models;
+
+[ExcludeFromCodeCoverage]
 public record RunResponse
 {
     public string QuestionId { get; init; } = null!;

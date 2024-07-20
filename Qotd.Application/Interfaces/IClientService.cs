@@ -1,4 +1,5 @@
 ﻿using Qotd.Application.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Qotd.Application.Interfaces;
 

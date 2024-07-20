@@ -1,4 +1,6 @@
-﻿namespace Qotd.Application.Enums;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Qotd.Application.Enums;
 
 /// <summary>
 /// Types of client authentication
@@ -30,6 +32,7 @@ public enum AuthenticationClientType
 /// <summary>
 /// Temporary solution until login and API key creation is supported
 /// </summary>
+[ExcludeFromCodeCoverage]
 public static class ClientNames
 {
     public const string Default = "DEFAULT";

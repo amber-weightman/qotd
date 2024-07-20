@@ -1,4 +1,8 @@
-﻿namespace Qotd.Infrastructure.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Qotd.Infrastructure.Models;
+
+[ExcludeFromCodeCoverage]
 
 internal sealed record Geolocation
 {
