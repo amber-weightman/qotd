@@ -8,10 +8,10 @@ namespace Qotd.Infrastructure.Services;
 
 internal sealed record QuestionService : IQuestionService
 {
-    private readonly IAIClient _client;
+    private readonly IAiClient _client;
     private readonly IIpApiClient _ipClient;
 
-    public QuestionService(IAIClient client, IIpApiClient ipClient)
+    public QuestionService(IAiClient client, IIpApiClient ipClient)
     {
         _client = client;
         _ipClient = ipClient;

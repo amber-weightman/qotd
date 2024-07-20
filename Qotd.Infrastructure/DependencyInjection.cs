@@ -15,7 +15,7 @@ public static class DependencyInjection
     public static IServiceCollection ConfigureInfrastructure(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddTransient<IQuestionService, QuestionService>();
-        services.AddTransient<IAIClient, AIClient>();
+        services.AddTransient<IAiClient, AiClient>();
 
         //https://learn.microsoft.com/en-us/dotnet/architecture/microservices/implement-resilient-applications/use-httpclientfactory-to-implement-resilient-http-requests
         services.AddHttpClient<OpenAI.OpenAIClient>("AIHttpClient");
@@ -36,6 +36,8 @@ public static class DependencyInjection
         });
 
         services.AddHttpClient<IIpApiClient, IpApiClient>();
+        
+        services.AddSingleton<IApiKeyService, ApiKeyService>();
 
         return services;
     }

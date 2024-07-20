@@ -1,8 +1,11 @@
 ﻿using FluentAssertions;
 using NSubstitute;
+using Qotd.Application.Interfaces;
 using Qotd.Application.Models;
 using Qotd.Infrastructure.AI.Models;
 using Qotd.Infrastructure.ChatGpt;
+using Qotd.Infrastructure.Clients;
+using Qotd.Infrastructure.Models;
 using Qotd.Infrastructure.Services;
 
 namespace Qotd.UnitTests.Infrastructure;
@@ -14,17 +17,19 @@ public class QuestionServiceTests
     private static string _mockRunId = "ccc";
     private static string _mockQuestion = "ddd";
 
-    private readonly QuestionService _service;
-    private readonly IAIClient _mockAIClient;
+    private readonly IQuestionService _service;
+    private readonly IAiClient _mockAiClient;
+    private readonly IIpApiClient _mockIpClient;
 
     public QuestionServiceTests()
     {
-        _mockAIClient = Substitute.For<IAIClient>();
+        _mockAiClient = Substitute.For<IAiClient>();
+        _mockIpClient = Substitute.For<IIpApiClient>();
 
-        _service = new QuestionService(_mockAIClient);
+        _service = new QuestionService(_mockAiClient, _mockIpClient);
     }
 
-    private static void MockSetup(IAIClient mockAIClient)
+    private static void MockSetup(IAiClient mockAIClient)
     {
         var mockSetupResponse = new ResponseBase
         {
@@ -33,11 +38,11 @@ public class QuestionServiceTests
         };
         mockAIClient.SetupThread(Arg.Any<CancellationToken>())
             .Returns(mockSetupResponse);
-        mockAIClient.SetupThread(Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<CancellationToken>())
+        mockAIClient.SetupThread(Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<Geolocation?>(), Arg.Any<CancellationToken>())
             .Returns(mockSetupResponse);
     }
 
-    private static void MockRequest(IAIClient mockAIClient)
+    private static void MockRequest(IAiClient mockAIClient)
     {
         mockAIClient.RequestQuestion(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(x => new ResponseBase
@@ -48,7 +53,7 @@ public class QuestionServiceTests
             });
     }
 
-    private static void MockFetch(IAIClient mockAIClient)
+    private static void MockFetch(IAiClient mockAIClient)
     {
         mockAIClient.FetchQuestion(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(x => new Response
@@ -60,7 +65,7 @@ public class QuestionServiceTests
             });
     }
 
-    private static void MockDelete(IAIClient mockAIClient)
+    private static void MockDelete(IAiClient mockAIClient)
     {
         mockAIClient.Delete(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>());
     }
@@ -71,10 +76,10 @@ public class QuestionServiceTests
     public async void GivenNullMetadata_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockSetup(_mockAIClient);
+        MockSetup(_mockAiClient);
 
         // Act
-        var sut = await _service.Setup(null, CancellationToken.None);
+        var sut = await _service.Setup(null, null, CancellationToken.None);
 
         // Assert
         sut.Should().NotBeNull();
@@ -86,7 +91,7 @@ public class QuestionServiceTests
     public async void GivenNullAssistantId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockSetup(_mockAIClient);
+        MockSetup(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -97,7 +102,7 @@ public class QuestionServiceTests
         };
 
         // Act
-        var sut = await _service.Setup(m, CancellationToken.None);
+        var sut = await _service.Setup(m, null, CancellationToken.None);
 
         // Assert
         sut.Should().NotBeNull();
@@ -109,7 +114,7 @@ public class QuestionServiceTests
     public async void GivenEmptyAssistantId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockSetup(_mockAIClient);
+        MockSetup(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -121,7 +126,7 @@ public class QuestionServiceTests
 
 
         // Act
-        var sut = await _service.Setup(m, CancellationToken.None);
+        var sut = await _service.Setup(m, null, CancellationToken.None);
 
         // Assert
         sut.Should().NotBeNull();
@@ -133,7 +138,7 @@ public class QuestionServiceTests
     public async void GivenNullThreadId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockSetup(_mockAIClient);
+        MockSetup(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -144,7 +149,7 @@ public class QuestionServiceTests
         };
 
         // Act
-        var sut = await _service.Setup(m, CancellationToken.None);
+        var sut = await _service.Setup(m, null, CancellationToken.None);
 
         // Assert
         sut.Should().NotBeNull();
@@ -156,7 +161,7 @@ public class QuestionServiceTests
     public async void GivenEmptyThreadId_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockSetup(_mockAIClient);
+        MockSetup(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -167,7 +172,7 @@ public class QuestionServiceTests
         };
 
         // Act
-        var sut = await _service.Setup(m, CancellationToken.None);
+        var sut = await _service.Setup(m, null, CancellationToken.None);
 
         // Assert
         sut.Should().NotBeNull();
@@ -179,7 +184,7 @@ public class QuestionServiceTests
     public async void GivenFullMetadata_WhenSetupCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockSetup(_mockAIClient);
+        MockSetup(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -190,7 +195,7 @@ public class QuestionServiceTests
         };
 
         // Act
-        var sut = await _service.Setup(m, CancellationToken.None);
+        var sut = await _service.Setup(m, null, CancellationToken.None);
 
         // Assert
         sut.Should().NotBeNull();
@@ -206,7 +211,7 @@ public class QuestionServiceTests
     public async void GivenNullMetadata_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockRequest(_mockAIClient);
+        MockRequest(_mockAiClient);
 
         // Act/Assert
         Func<Task> sut = async () => { await _service.GenerateQuestion(null, CancellationToken.None); };
@@ -217,7 +222,7 @@ public class QuestionServiceTests
     public async void GivenNullAssistantId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockRequest(_mockAIClient);
+        MockRequest(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -236,7 +241,7 @@ public class QuestionServiceTests
     public async void GivenEmptyAssistantId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockRequest(_mockAIClient);
+        MockRequest(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -255,7 +260,7 @@ public class QuestionServiceTests
     public async void GivenNullThreadId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockRequest(_mockAIClient);
+        MockRequest(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -274,7 +279,7 @@ public class QuestionServiceTests
     public async void GivenEmptyThreadId_WhenGenerateQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockRequest(_mockAIClient);
+        MockRequest(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -293,7 +298,7 @@ public class QuestionServiceTests
     public async void GivenFullMetadata_WhenGenerateQuestionCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockRequest(_mockAIClient);
+        MockRequest(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -321,7 +326,7 @@ public class QuestionServiceTests
     public async void GivenNullMetadata_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockFetch(_mockAIClient);
+        MockFetch(_mockAiClient);
 
         // Act/Assert
         Func<Task> sut = async () => { await _service.GetQuestion(null, _mockRunId, CancellationToken.None); };
@@ -332,7 +337,7 @@ public class QuestionServiceTests
     public async void GivenNullThreadId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockFetch(_mockAIClient);
+        MockFetch(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -350,7 +355,7 @@ public class QuestionServiceTests
     public async void GivenEmptyThreadId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockFetch(_mockAIClient);
+        MockFetch(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -368,7 +373,7 @@ public class QuestionServiceTests
     public async void GivenNullRunId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockFetch(_mockAIClient);
+        MockFetch(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -386,7 +391,7 @@ public class QuestionServiceTests
     public async void GivenEmptyRunId_WhenGetQuestionCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockFetch(_mockAIClient);
+        MockFetch(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -404,7 +409,7 @@ public class QuestionServiceTests
     public async void GivenFullMetadata_WhenGetQuestionCalled_ThenValidMetadataReturned()
     {
         // Arrange
-        MockFetch(_mockAIClient);
+        MockFetch(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -430,7 +435,7 @@ public class QuestionServiceTests
     public async void GivenNullMetadata_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockDelete(_mockAIClient);
+        MockDelete(_mockAiClient);
 
         // Act/Assert
         Func<Task> sut = async () => { await _service.Delete(null, CancellationToken.None); };
@@ -441,7 +446,7 @@ public class QuestionServiceTests
     public async void GivenNullAssistantId_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockDelete(_mockAIClient);
+        MockDelete(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -460,7 +465,7 @@ public class QuestionServiceTests
     public async void GivenEmptyAssistantId_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockDelete(_mockAIClient);
+        MockDelete(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -479,7 +484,7 @@ public class QuestionServiceTests
     public async void GivenNullThreadId_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockDelete(_mockAIClient);
+        MockDelete(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>
@@ -498,7 +503,7 @@ public class QuestionServiceTests
     public async void GivenEmptyThreadId_WhenDeleteCalled_ThenExceptionThrown()
     {
         // Arrange
-        MockDelete(_mockAIClient);
+        MockDelete(_mockAiClient);
         var m = new Metadata
         {
             Values = new Dictionary<string, string>

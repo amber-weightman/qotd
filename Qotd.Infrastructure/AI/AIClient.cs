@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 
 namespace Qotd.Infrastructure.ChatGpt;
 
-internal interface IAIClient
+internal interface IAiClient
 {
     Task<ResponseBase> SetupThread(CancellationToken cancellationToken);
     Task<ResponseBase> SetupThread(string? assistantId, string? threadId, Geolocation? geolocation, CancellationToken cancellationToken);
@@ -20,13 +20,13 @@ internal interface IAIClient
     Task Delete(string assistantId, string threadId, CancellationToken cancellationToken);
 }
 
-internal sealed record AIClient : IAIClient
+internal sealed record AiClient : IAiClient
 {
     private static readonly string Model = Constants.GptModel.GPT3_5_Turbo;
 
     private readonly OpenAIClient _client;
 
-    public AIClient(OpenAIClient client)
+    public AiClient(OpenAIClient client)
     {
         _client = client;
     }
